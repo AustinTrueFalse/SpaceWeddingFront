@@ -1,0 +1,13 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "esnext",
+    "baseUrl": ".",
+    "paths": {
+      "#app": ["./.nuxt/types/app/index.d.ts"],
+      "@/*": ["./*"],
+      "vue": ["node_modules/vue"]
+    }
+  }
+}

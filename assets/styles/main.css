@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900&display=swap");
+
+/* Добавление San Francisco */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: normal;
+  font-style: normal;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/sanfrancisco/1.0.0/SF-UI-Display-Regular.otf")
+    format("opentype");
+}
+
+@font-face {
+  font-family: "San Francisco";
+  font-weight: bold;
+  font-style: normal;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/sanfrancisco/1.0.0/SF-UI-Display-Bold.otf")
+    format("opentype");
+}
+
+/* Применение ко всему приложению */
+* {
+  font-family: "San Francisco", "Inter", sans-serif;
+}
+
+/* Vuetify settings */
+.custom-dark-background {
+  background-color: #020313 !important; /* Чернильный цвет */
+}
+
+/* Get started page */
+.main-title {
+  font-size: 50px;
+  font-weight: 800;
+}
+
+/* Login form */
+.login-form {
+  width: 400px;
+  background-color: rgba(11, 14, 48, 0.596) !important;
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+/* Внутренние элементы формы */
+.login-form .v-card-title,
+.login-form .v-text-field,
+.login-form .v-btn {
+  background-color: transparent !important;
+  color: white;
+}
+
+/* Переопределение курсора для readonly полей */
+.no-text-cursor {
+  cursor: default !important;
+}
+
+.no-text-cursor .v-input__control,
+.no-text-cursor input {
+  cursor: default !important;
+}
+
+/* Карточки с градиентом */
+.event-card {
+  background: linear-gradient(135deg, #1a1a50, #0a0a26) !important;
+  color: white !important;
+}
+
+/* Текст даты и времени */
+.date-time-text {
+  color: #8a8aff !important;
+}
+
+.chip-field-label {
+  font-size: 18px;
+  color: #8a8aff; /* Цвет текста для заголовка */
+  margin-bottom: 4px; /* Отступ между заголовком и чипом */
+}
+
+.field-chip {
+  width: 100%;
+}
+
+.main-title {
+  font-size: 36px !important;
+}
+
+
+/* EventCard */
+
+.event-card-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Высота для центрирования, измените по необходимости */
+}
+
+.large-icon {
+  font-size: 48px !important; /* Размер иконки, измените по необходимости */
+}
