@@ -3,10 +3,10 @@
 
   <component :is="DynamicTemplate" :event-date="currentEvent?.eventDate" />
   <v-form>
-    <InputText v-model="guestStore.guestName" label="Name" />
-    <InputText v-model="guestStore.guestPhone" label="Phone" />
-    <CheckboxGroup v-model="guestStore.guestDrinks" :items="drinkListItems" />
-    <RadioGroup v-model="guestStore.guestStatus" :items="guestStatuses" />
+    <InputText v-model="guestStore.guest.guestName" label="Name" />
+    <InputText v-model="guestStore.guest.guestPhone" label="Phone" />
+    <CheckboxGroup v-model="guestStore.guest.guestDrinks" :items="drinkListItems" />
+    <RadioGroup v-model="guestStore.guest.guestStatus" :items="guestStatuses" />
     <ButtonDefault
       class="mb-5 w-100"
       text="Создать"

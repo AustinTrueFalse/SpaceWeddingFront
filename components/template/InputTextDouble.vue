@@ -9,6 +9,7 @@
         :readonly="readonly"
         rounded="xl"
         variant="solo-filled"
+        :bg-color="bgColor"
       />
     </v-col>
     <v-col>
@@ -19,6 +20,7 @@
         :readonly="readonly"
         rounded="xl"
         variant="solo-filled"
+        :bg-color="bgColor"
       />
     </v-col>
     <v-col cols="1" class="px-0" v-if="$slots.default">
@@ -63,6 +65,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  bgColor: {
+    type: String,
+    default: "",
+  }
 });
 
 const emit = defineEmits(["update:modelValue"]);

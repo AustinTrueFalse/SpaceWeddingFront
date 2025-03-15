@@ -1,10 +1,11 @@
 <template>
   <v-btn
-    :color="color"
+    class="custom-button"
     @click="onClick"
-    variant="outlined"
-    rounded="lg"
+    variant="flat"
+    rounded="xl"
     :disabled="disabled"
+    :style="{ background: computedBackground }"
   >
     <span v-if="!loadingStatus">{{ text }}</span>
     <v-progress-circular
@@ -18,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 
 export default defineComponent({
   props: {
@@ -28,7 +29,11 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: "white",
+      default: "", // Обычный цвет (например, "#ff0000" или "blue")
+    },
+    colorStops: {
+      type: Array as () => { color: string; percent: string }[],
+      default: () => [], // Градиент
     },
     clickFunction: {
       type: Function,
@@ -46,6 +51,20 @@ export default defineComponent({
       default: false,
     },
   },
+  setup(props) {
+    const computedBackground = computed(() => {
+      if (props.color) {
+        return props.color; // Если передан обычный цвет — используем его
+      } else if (props.colorStops.length) {
+        return `linear-gradient(90deg, ${props.colorStops
+          .map((stop) => `${stop.color} ${stop.percent}`)
+          .join(", ")})`; // Если передан градиент — формируем его
+      }
+      return "gray"; // Значение по умолчанию
+    });
+
+    return { computedBackground };
+  },
   methods: {
     onClick() {
       if (!this.loadingStatus) {
@@ -55,3 +74,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.custom-button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  transition: 0.3s;
+  color: white;
+}
+</style>

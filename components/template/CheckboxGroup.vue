@@ -1,12 +1,22 @@
 <template>
-  <v-container>
-    <v-checkbox
-      v-for="item in items"
-      :key="item.id"
-      v-model="selectedItems"
-      :label="item.label"
-      :value="item.id"
-    />
+  <v-container class="pa-0">
+    <v-row>
+      <v-card-title>
+        {{ title }}
+      </v-card-title>
+    </v-row>
+
+    <v-row dense>
+      <v-col v-for="item in items" :key="item.id" cols="auto">
+        <v-checkbox
+          v-model="selectedItems"
+          :label="item.label"
+          :value="item.id"
+          density="compact"
+          class="mt-0 pt-0"
+        />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -21,6 +31,7 @@ interface CheckboxItem {
 const props = defineProps<{
   items: CheckboxItem[]; // Список элементов для чекбоксов
   modelValue: (string | number)[]; // Массив выбранных значений
+  title: string;
 }>();
 
 const emit = defineEmits();

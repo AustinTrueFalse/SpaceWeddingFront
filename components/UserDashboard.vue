@@ -53,7 +53,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 onMounted(async () => {
-  eventStore.selectedEvent = null;
+  //eventStore.selectedEvent = null;
   await eventStore.getEvents();
 });
 
@@ -75,6 +75,7 @@ const getTime = (dateString: string | Date): string => {
 };
 
 const forwardToCreatePage = () => {
+  eventStore.resetSelectedEvent()
   router.push("/event/create");
 };
 

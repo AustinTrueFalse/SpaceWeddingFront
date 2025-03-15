@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-row justify="center">
+    <v-row v-if="!readonly" justify="center" class="mb-5">
       <v-col
         ><v-combobox
           class="text-input"
-          bg-color="indigo-darken-4"
+          bg-color="#1A1A50"
           v-model="suggest"
           :items="transformedSuggestResponse ?? []"
-          :item-value="(item) => item.key"
+          :item-value="(item: any) => item.key"
           :label="label"
           :placeholder="'Начните вводить для поиска'"
           :readonly="readonly"
@@ -31,8 +31,8 @@
 
     <v-card
       rounded="xl"
-      height="400px"
-      class="mt-5 d-flex justify-center align-center"
+      :height="height"
+      class="d-flex justify-center align-center"
     >
       <yandex-map
         v-model="map"
@@ -43,7 +43,7 @@
           },
           showScaleInCopyrights: true,
         }"
-        height="400px"
+        :height="height"
       >
         <yandex-map-default-scheme-layer :settings="{ theme: 'dark' }" />
         <yandex-map-default-features-layer />
@@ -100,6 +100,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  height: {
+    type: String,
+    default: "400px",
+  }
 });
 
 const selectedSuggest = ref<LngLat | null>([37.617644, 55.755819]);

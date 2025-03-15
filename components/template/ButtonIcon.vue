@@ -1,6 +1,6 @@
 <template>
   <v-btn @click="onClick" icon :disabled="disabled" variant="plain">
-    <v-icon :color="color">{{ mdiIcon }}</v-icon>
+    <v-icon :color="color" size="x-large">{{ mdiIcon }}</v-icon>
     <v-progress-circular
       v-if="loadingStatus"
       :size="20"

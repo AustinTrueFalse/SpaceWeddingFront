@@ -1,10 +1,9 @@
 <template>
-  <EventCreate />
+  <EventEdit />
 </template>
 
 <script>
-
-import EventCreate from "~/components/EventCreate.vue";
+import EventEdit from "~/components/EventEdit.vue";
 
 definePageMeta({
   middleware: "auth", // Применяем middleware auth
@@ -12,7 +11,7 @@ definePageMeta({
 
 export default {
   components: {
-    EventCreate,
+    EventEdit,
   },
 };
 </script>

@@ -1,9 +1,9 @@
 <template>
-  <EventInfo />
+  <EventDetails />
 </template>
 
 <script>
-import EventInfo from "~/components/EventInfo.vue";
+import EventDetails from "~/components/EventDetails.vue";
 
 definePageMeta({
   middleware: "auth", // Применяем middleware auth
@@ -11,7 +11,7 @@ definePageMeta({
 
 export default {
   components: {
-    EventInfo,
+    EventDetails,
   },
 };
 </script>

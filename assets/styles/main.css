@@ -86,6 +86,15 @@
   font-size: 36px !important;
 }
 
+.big-button {
+  font-size: 20px !important;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+
 
 /* EventCard */
 
@@ -98,4 +107,10 @@
 
 .large-icon {
   font-size: 48px !important; /* Размер иконки, измените по необходимости */
+}
+
+.combobox-chip {
+  font-size: 16px; /* Увеличиваем шрифт */
+  height: 40px; /* Увеличиваем высоту */
+  padding: 10px; /* Добавляем отступы */
 }

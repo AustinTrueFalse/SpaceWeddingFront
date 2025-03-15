@@ -11,6 +11,7 @@
           :label="label"
           flat
           :model-value="formattedDate"
+          :bg-color="bgColor"
           @click="isOpen = true"
         >
         </v-text-field>
@@ -38,6 +39,10 @@ const props = defineProps({
   label: {
     type: String,
     default: "",
+  },
+  bgColor: {
+    type: String,
+    default: ""
   },
   onUpdate: {
     type: Function,

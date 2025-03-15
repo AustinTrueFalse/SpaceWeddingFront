@@ -1,10 +1,11 @@
 <template>
-  <v-container max-width="1000px">
+  <v-container max-width="1000px" class="mb-15">
     <v-row justify="center">
       <v-col>
         <InputTextRaw
-          v-model="eventStore.eventName"
+          v-model="selectedEvent.eventName"
           label="Название мероприятия"
+         
         />
         <v-row justify="center" class="mt-15">
           <v-col cols="3">
@@ -12,14 +13,16 @@
               :model-value="selectedDate"
               :onUpdate="(value: Date) => (selectedDate = value)"
               label="Дата мероприятия"
+              :bg-color="themeColors.primary"
             ></DatePicker>
           </v-col>
           <v-col cols="3">
-            <TimePicker
-              :model-value="selectedDate"
-              :onUpdate="(value: Date) => (selectedDate = value)"
+            <InputText
+              v-model="selectedEvent.eventTime"
+              time
               label="Время мероприятия"
-            ></TimePicker>
+              :bg-color="themeColors.primary"
+            />
           </v-col>
         </v-row>
         <v-row justify="center">
@@ -29,7 +32,15 @@
             >
           </v-col>
         </v-row>
-        <YandexMap v-model="eventStore.eventLocation" label="Местоположение" />
+        <v-row justify="center">
+          <v-col cols="10">
+            <YandexMap
+              v-model="eventStore.selectedEvent.eventLocation"
+              label="Местоположение"
+            />
+          </v-col>
+        </v-row>
+
         <v-row justify="center">
           <v-col>
             <v-card-title class="mt-15 text-center main-title"
@@ -52,10 +63,14 @@
               >
                 <v-item
                   :value="design.designName"
-                  v-slot="{ selectedClass, toggle }"
+                  v-slot="{ isSelected, toggle }"
                 >
                   <v-card
-                    :class="['d-flex align-center', selectedClass]"
+                    :class="[
+                      'd-flex align-center',
+                      isSelected ? 'selected-card' : 'default-card',
+                      isSelected ? 'purple-accent-1' : 'grey-light',
+                    ]"
                     height="200"
                     dark
                     rounded="xl"
@@ -79,10 +94,16 @@
         </v-row>
         <v-row>
           <v-col>
-            <InputTextRaw v-model="eventStore.eventName" label="Имя жениха" />
+            <InputTextRaw
+              v-model="selectedEvent.eventCouple.groomName"
+              label="Имя жениха"
+            />
           </v-col>
-          <v-col
-            ><InputTextRaw v-model="eventStore.eventName" label="Имя невесты" />
+          <v-col>
+            <InputTextRaw
+              v-model="selectedEvent.eventCouple.brideName"
+              label="Имя невесты"
+            />
           </v-col>
         </v-row>
         <v-row justify="center">
@@ -91,27 +112,29 @@
               >Тайминг
               <ButtonIcon
                 mdi-icon="mdi-plus"
-                color="deep-purple-lighten-3"
+                :color="themeColors.accent"
                 :click-function="addTiming"
-            /></v-card-title>
+              />
+            </v-card-title>
           </v-col>
         </v-row>
         <v-row justify="center">
-          <v-col>
+          <v-col cols="10">
             <InputTextDouble
-              v-for="(item, index) in eventStore.eventTiming"
+              v-for="(item, index) in selectedEvent.eventTiming"
               :key="item.id"
-              v-model:modelValue="eventStore.eventTiming[index]"
+              v-model:modelValue="selectedEvent.eventTiming[index]"
               :first-field="'time'"
               :second-field="'description'"
               :first-label="'Время'"
               :second-label="'Описание'"
               :readonly="false"
+              :bg-color="themeColors.primary"
             >
               <ButtonIcon
                 class="mb-5"
                 mdi-icon="mdi-close"
-                color="error"
+                :color="themeColors.error"
                 :click-function="() => deleteTiming(item.id)"
               />
             </InputTextDouble>
@@ -124,27 +147,41 @@
             >
           </v-col>
         </v-row>
-        <v-row>
-          <Combobox
-            v-model="eventStore.eventDrinks"
-            :items="eventStore.drinksDictionary"
-            item-label="drinkName"
-            item-value="Id"
-            label="Выберите напитки"
-          >
-          </Combobox>
+        <v-row justify="center">
+          <v-col cols="10">
+            <Combobox
+              v-model="selectedEvent.eventDrinks"
+              :items="eventStore.drinksDictionary"
+              item-label="drinkName"
+              item-value="Id"
+              label="Выберите напитки"
+            />
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col cols="10">
+            <ButtonDefault
+              class="mt-15 mb-5 w-100"
+              text="Просмотреть"
+              :color="themeColors.primary"
+              :loading-status="eventStore.loadingStatuses.eventCreate"
+              :click-function="createEvent"
+            />
+          </v-col>
+        </v-row>
+        <v-row justify="center" class="mt-0">
+          <v-col cols="10">
+            <ButtonDefault
+              class="mb-5 w-100"
+              text="Создать"
+              :colorStops="gradientSettings"
+              :loading-status="eventStore.loadingStatuses.eventCreate"
+              :click-function="createEvent"
+            />
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
-
-    <v-card-actions class="pt-5 ml-3 d-flex justify-space-between align-center">
-      <ButtonDefault
-        class="mb-5 w-100"
-        text="Создать"
-        :loading-status="eventStore.loadingStatuses.eventCreate"
-        :click-function="createEvent"
-      ></ButtonDefault>
-    </v-card-actions>
   </v-container>
 </template>
 
@@ -153,31 +190,32 @@ import { storeToRefs } from "pinia";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useEventStore } from "@/stores/event";
+import { themeColors, gradientSettings } from "@/config/themeConfig";
 
 import InputText from "./components/template/InputText.vue";
 import InputTextRaw from "./components/template/InputTextRaw.vue";
-import InputTextDouble from "./components//template/InputTextDouble.vue";
+import InputTextDouble from "./components/template/InputTextDouble.vue";
 import ButtonDefault from "./components/template/ButtonDefault.vue";
 import ButtonIcon from "./template/ButtonIcon.vue";
 import DatePicker from "./components/template/DatePicker.vue";
-import TimePicker from "./components/template/TimePicker.vue";
 import YandexMap from "./components/template/YandexMap.vue";
 import Combobox from "./components/template/Combobox.vue";
 
 const router = useRouter();
 
 const eventStore = useEventStore();
-const { eventTiming } = storeToRefs(eventStore); // Делаем реактивную привязку
+
+const selectedEvent = computed(() => eventStore.selectedEvent);
 
 const selectedDate = computed({
-  get: () => eventStore.eventDate,
+  get: () => eventStore.selectedEvent.eventDate,
   set: (value: Date) => eventStore.setDate(value),
 });
 
 const selectedDesign = computed({
-  get: () => eventStore.selectedDesign, // Берем первый выбранный объект
+  get: () => eventStore.selectedEvent.eventDesignId,
   set: (design) => {
-    eventStore.selectedDesign = design; // Обновляем массив с единственным элементом
+    eventStore.selectedEvent.eventDesignId = design;
   },
 });
 
@@ -206,5 +244,7 @@ const backToDashboard = () => {
 </script>
 
 <style scoped>
-/* Стили для компонента MainPage */
+.selected-card {
+  background-color: #1a1a50; /* Цвет для выбранной карточки */
+}
 </style>

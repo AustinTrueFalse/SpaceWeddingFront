@@ -1,6 +1,6 @@
 // stores/auth.ts
 import { defineStore } from "pinia";
-import { ref } from "vue"
+import { ref } from "vue";
 import apiFetch from "../api";
 import { useSnackbarStore } from "./snackbar";
 
@@ -9,132 +9,154 @@ import type { Design } from "@/types/design";
 import type { Drink } from "@/types/drink";
 import type { GuestStatus } from "@/types/guestStatus";
 import type { Timing } from "@/types/timing";
+import type { Guest } from "@/types/guest";
+import type { Todo } from "@/types/todo";
 
 interface LoadingStatuses {
   [key: string]: boolean;
 }
 
 interface EventState {
-  eventName: string;
-  eventDate: Date | null;
-  eventLocation: string | null;
-  selectedDesign: string;
-  eventDrinks: Drink[];
-  eventTiming: Timing[];
-  guestStatuses: GuestStatus[];
-  designList: Design[];
   eventList: Event[];
-  selectedEvent: Event | null;
+  selectedEvent: Event;
+  designList: Design[];
   drinksDictionary: Drink[];
   loadingStatuses: LoadingStatuses;
 }
 
 export const useEventStore = defineStore("event", {
   state: (): EventState => ({
-    eventName: "",
-    eventDate: null,
-    eventLocation: null,
-    selectedDesign: "gothic",
     designList: [],
     eventList: [],
-    selectedEvent: null,
-    eventDrinks: [],
-    eventTiming: [],
-    guestStatuses: [],
-    drinksDictionary: [
-      {
-        id: "1",
-        drinkName: "Коньяк",
+    selectedEvent: {
+      id: "",
+      created: new Date(),
+      eventName: "",
+      eventTime: "",
+      eventDate: new Date(),
+      eventDesignId: 0,
+      eventLocation: "",
+      eventDrinks: [],
+      eventTiming: [
+        {
+          id: "1",
+          time: "18:00",
+          description: "Встреча на площадке",
+        },
+        {
+          id: "1",
+          time: "18:00",
+          description: "Церемония",
+        },
+        {
+          id: "1",
+          time: "19:00",
+          description: "Ужин",
+        },
+      ],
+      eventCouple: {
+        groomName: "",
+        brideName: "",
       },
-      {
-        id: "2",
-        drinkName: "Вино",
-      },
-    ],
+      guestStatuses: [],
+      userId: "",
+      hostId: "",
+      guests: [],
+      todoList: [],
+      allowedUsers: [],
+    },
+    drinksDictionary: [],
     loadingStatuses: {
       eventCreate: false,
       eventList: false,
       eventDelete: false,
       selecetedEvent: false,
       designList: false,
+      drinksDictionary: false,
+      guestList: false,
     },
   }),
-
+  getters: {
+    eventGuestCount: (state) => state.selectedEvent.guests.length,
+    eventGuestComeCount: (state) =>
+      state.selectedEvent.guests.filter((g) => g.guestStatus === "1").length,
+    eventGuestNotComeCount: (state) =>
+      state.selectedEvent.guests.filter((g) => g.guestStatus === "2").length,
+    eventGuestUnknownComeCount: (state) =>
+      state.selectedEvent.guests.filter((g) => g.guestStatus === "3").length,
+  },
   actions: {
+    resetSelectedEvent() {
+      this.selectedEvent = {
+        id: "",
+        created: new Date(),
+        eventName: "",
+        eventTime: "",
+        eventDate: new Date(),
+        eventDesignId: 0,
+        eventLocation: "",
+        eventDrinks: [],
+        eventTiming: [
+          {
+            id: "1",
+            time: "18:00",
+            description: "Встреча на площадке",
+          },
+          {
+            id: "2",
+            time: "18:30",
+            description: "Церемония",
+          },
+          {
+            id: "3",
+            time: "19:00",
+            description: "Ужин",
+          },
+        ],
+        eventCouple: {
+          groomName: "",
+          brideName: "",
+        },
+        guestStatuses: [],
+        userId: "",
+        hostId: "",
+        guests: [],
+        todoList: [],
+        allowedUsers: [],
+      };
+    },
     setDate(value: Date) {
-      this.eventDate = value; // Обновление даты
-    },
-    addTimingSelectedEvent() {
-      if (!this.selectedEvent) {
-        console.error("selectedEvent is null");
-        return;
-      }
-      if (!this.selectedEvent?.eventTiming) {
-        this.selectedEvent.eventTiming = [
-          { id: "0", time: "", description: "" },
-        ];
-      } else {
-        const maxId = this.selectedEvent.eventTiming.reduce(
-          (max, drink) => Math.max(max, parseInt(drink.id, 10) || 0),
-          0
-        );
-        this.selectedEvent.eventTiming.push({
-          id: (maxId + 1).toString(),
-          time: "",
-          description: "",
-        });
-      }
-    },
-    updateTimingTimeSelectedEvent(id: string, time: string) {
-      const timing = this.selectedEvent?.eventTiming.find((d) => d.id === id);
-      if (timing) {
-        timing.time = time;
-      }
-    },
-    updateTimingDescrSelectedEvent(id: string, descr: string) {
-      const timing = this.selectedEvent?.eventTiming.find((d) => d.id === id);
-      if (timing) {
-        timing.description = descr;
-      }
-    },
-    deleteTimingSelectedEvent(id: string) {
-      if (!this.selectedEvent) {
-        console.error("selectedEvent is null");
-        return;
-      }
-      if (this.selectedEvent.eventTiming.length > 1) {
-        this.selectedEvent.eventTiming = this.selectedEvent.eventTiming.filter(
-          (d) => d.id !== id
-        );
-      }
+      this.selectedEvent.eventDate = value; // Обновление даты
     },
     addTiming() {
-      const maxId = this.eventTiming.reduce(
+      const maxId = this.selectedEvent.eventTiming.reduce(
         (max, timing) => Math.max(max, parseInt(timing.id, 10) || 0),
         0
       );
-      this.eventTiming.push({
+      this.selectedEvent.eventTiming.push({
         id: (maxId + 1).toString(),
         time: "",
         description: "",
       });
     },
     updateTimingTime(id: string, time: string) {
-      const timing = this.eventTiming.find((d) => d.id === id);
+      const timing = this.selectedEvent.eventTiming.find((d) => d.id === id);
       if (timing) {
         timing.time = time;
       }
     },
     updateTimingDescr(id: string, descr: string) {
-      const timing = this.eventTiming.find((d) => d.id === id);
+      const timing = this.selectedEvent.eventTiming.find((d) => d.id === id);
       if (timing) {
         timing.description = descr;
       }
     },
     deleteTiming(id: string) {
-      const index = this.eventTiming.findIndex((d) => d.id === id);
+      const index = this.selectedEvent.eventTiming.findIndex(
+        (d) => d.id === id
+      );
       if (index !== -1) {
-        this.eventTiming.splice(index, 1);
+        this.selectedEvent.eventTiming.splice(index, 1);
       }
     },
     async createEvent() {
@@ -142,12 +164,15 @@ export const useEventStore = defineStore("event", {
         this.loadingStatuses.eventCreate = true;
 
         await apiFetch("api/events/add", {
-          eventName: this.eventName,
-          eventDate: this.eventDate,
-          eventLocation: this.eventLocation,
-          eventDesignId: this.selectedDesign,
-          eventDrinks: this.eventDrinks,
-          guestStatuses: this.guestStatuses,
+          eventName: this.selectedEvent.eventName,
+          eventDate: this.selectedEvent.eventDate,
+          eventTime: this.selectedEvent.eventTime,
+          eventLocation: this.selectedEvent.eventLocation,
+          eventDesignId: this.selectedEvent.eventDesignId,
+          eventDrinks: this.selectedEvent.eventDrinks,
+          eventTiming: this.selectedEvent.eventTiming,
+          eventCouple: this.selectedEvent.eventCouple,
+          guestStatuses: this.selectedEvent.guestStatuses,
         });
 
         this.loadingStatuses.eventCreate = false;
@@ -195,10 +220,25 @@ export const useEventStore = defineStore("event", {
     },
     async getDrinks() {
       try {
-        this.eventDrinks = [];
-        this.loadingStatuses.guestList = true;
+        this.drinksDictionary = [];
+        this.loadingStatuses.drinksDictionary = true;
         const res = await apiFetch<Drink[]>("api/guests/drinks");
-        this.eventDrinks = res;
+        this.drinksDictionary = res;
+        this.loadingStatuses.drinksDictionary = false;
+      } catch (error) {
+        this.loadingStatuses.drinksDictionary = false;
+        console.error(error);
+      }
+    },
+    async getGuests(eventId: string) {
+      try {
+        this.loadingStatuses.guestList = true;
+        const res = await apiFetch<Guest[]>("api/guests/list", {
+          eventId: eventId,
+        });
+        console.log(res);
+        this.selectedEvent.guests = res;
+        console.log(this.selectedEvent.guests);
         this.loadingStatuses.guestList = false;
       } catch (error) {
         this.loadingStatuses.guestList = false;
@@ -209,7 +249,7 @@ export const useEventStore = defineStore("event", {
       try {
         this.loadingStatuses.guestList = true;
         const res = await apiFetch<GuestStatus[]>("api/guests/visit_sts");
-        this.guestStatuses = res;
+        this.selectedEvent.guestStatuses = res;
         this.loadingStatuses.guestList = false;
       } catch (error) {
         this.loadingStatuses.guestList = false;
@@ -234,11 +274,14 @@ export const useEventStore = defineStore("event", {
       try {
         this.loadingStatuses.eventDelete = true;
         await apiFetch("api/events/update", {
-          eventName: this.selectedEvent?.eventName,
-          eventDate: this.eventDate,
-          eventLocation: this.selectedEvent?.eventLocation,
-          eventDesignId: this.selectedEvent?.eventDesignId,
-          eventDrinks: this.selectedEvent?.eventDrinks,
+          eventName: this.selectedEvent.eventName,
+          eventDate: this.selectedEvent.eventDate,
+          eventTime: this.selectedEvent.eventTime,
+          eventLocation: this.selectedEvent.eventLocation,
+          eventDesignId: this.selectedEvent.eventDesignId,
+          eventDrinks: this.selectedEvent.eventDrinks,
+          eventTiming: this.selectedEvent.eventTiming,
+          eventCouple: this.selectedEvent.eventCouple,
           guestStatuses: this.selectedEvent?.guestStatuses,
           eventId: eventId,
         });
@@ -248,6 +291,51 @@ export const useEventStore = defineStore("event", {
         this.loadingStatuses.eventDelete = false;
       } catch (error) {
         this.loadingStatuses.eventDelete = false;
+        console.error(error);
+      }
+    },
+    addTodoTask(name: string) {
+      const newTask: Todo = {
+        id: Date.now().toString(), // Генерируем уникальный ID
+        name: name,
+        completed: false,
+      };
+
+      console.log(name)
+      console.log(newTask)
+
+      this.selectedEvent.todoList.push(newTask);
+    },
+    updateTodoTask(id: string, completed: boolean | null) {
+      const task = this.selectedEvent.todoList.find((task) => task.id === id);
+      if (task && completed !== null) {
+        task.completed = completed;
+      }
+    },
+    deleteTodoTask(id: string) {
+      const taskToRemove = this.selectedEvent.todoList.find(
+        (task) => task.id === id
+      );
+      if (!taskToRemove) return;
+
+      this.selectedEvent.todoList = this.selectedEvent.todoList.filter(
+        (task) => task.id !== id
+      );
+    },
+    async updateTodo(eventId: string) {
+      try {
+        // this.loadingStatuses.eventCreate = true;
+
+        await apiFetch("api/events/update_todo", {
+          eventId,
+          todoList: this.selectedEvent.todoList,
+        });
+
+        this.loadingStatuses.eventCreate = false;
+        const snackbarStore = useSnackbarStore();
+        snackbarStore.showSnackbar("Туду обновлен", "success");
+      } catch (error: any) {
+        // this.loadingStatuses.eventCreate = false;
         console.error(error);
       }
     },

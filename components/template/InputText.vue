@@ -3,15 +3,18 @@
     :class="{ 'no-text-cursor': readonly }"
     v-model="localValue"
     :label="label"
-    :type="type"
+    :placeholder="computedPlaceholder"
+    :type="inputType"
     :rules="rules"
     :messages="customErrorMessages"
     :error="!!customErrorStatus"
     :readonly="readonly"
     rounded="xl"
     :variant="variant"
+    :bg-color="bgColor"
     flat
     @input="onInputChange"
+    @keypress="onKeyPress"
   >
     <template #append-inner>
       <v-progress-circular
@@ -31,7 +34,6 @@
 import "../../assets/styles/main.css"
 import { ref, computed, watch } from "vue";
 
-// Пропсы, переданные в компонент
 const props = defineProps({
   modelValue: {
     type: String,
@@ -40,6 +42,10 @@ const props = defineProps({
   label: {
     type: String,
     default: "",
+  },
+  bgColor: {
+    type: String,
+    default: ""
   },
   type: {
     type: String,
@@ -51,7 +57,7 @@ const props = defineProps({
   },
   readonly: {
     type: Boolean,
-    default: false
+    default: false,
   },
   loadingStatus: {
     type: Boolean,
@@ -67,12 +73,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  time: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// Локальная реактивная переменная для связывания с v-model
 const localValue = ref(props.modelValue);
-
-// Эмитим событие для обновления modelValue
 const emit = defineEmits();
 
 const customErrorMessages = computed(() => {
@@ -83,13 +90,35 @@ const customErrorStatus = computed(() => {
   return props.customRules;
 });
 
-// Слежение за изменениями localValue и эмитирование события в родительский компонент
+const computedPlaceholder = computed(() => {
+  return props.time ? "hh:mm" : "";
+});
+
+const inputType = computed(() => {
+  return props.time ? "text" : props.type;
+});
+
 watch(localValue, (newValue) => {
   emit("update:modelValue", newValue);
 });
 
 const onInputChange = () => {
-  emit("input-change", localValue.value); // Генерация события input-change
+  emit("input-change", localValue.value);
+};
+
+const onKeyPress = (event: KeyboardEvent) => {
+  if (!props.time) return;
+
+  const allowedChars = /[0-9:]/;
+  const maxLength = 5;
+
+  if (!allowedChars.test(event.key) || localValue.value.length >= maxLength) {
+    event.preventDefault();
+    return;
+  }
+
+  if (localValue.value.length === 2 && event.key !== ":") {
+    localValue.value += ":";
+  }
 };
 </script>
-
