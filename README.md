@@ -1,3 +1,22 @@
+## 📅 Event Management Application
+
+A modern web application designed to streamline the **creation, invitation, and tracking** of events.
+
+### ✨ Key Features:
+- **Event Creation**: Easily create and manage events with customizable details such as date, time, location, and description.
+- **Invitation System**: Send personalized invitations to guests and manage RSVP statuses.
+- **Event Analytics**: Track attendance and monitor guest responses to gain insights into event effectiveness.
+
+### 🛠️ Tech Stack:
+- **Nuxt 3**  
+- **Vue 3**  
+- **Pinia**
+- **TypeScript**
+
+This application simplifies event planning and guest coordination, making it ideal for both personal and corporate use.
+
+
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
