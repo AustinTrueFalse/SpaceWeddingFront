@@ -111,19 +111,22 @@ export const useAuthStore = defineStore("auth", {
         snackbarStore.showSnackbar(getErrorMessage(error), "error");
         localStorage.removeItem("user");
         console.error(error);
+        throw error;
       }
     },
     async signInWithGoogle() {
       try {
         this.loadingStatuses.signInStatus = true;
+        
 
         const result = await signInWithPopup(auth, googleProvider);
         const idToken = await result.user.getIdToken();
+        const refreshToken = result.user.refreshToken;
 
         const res = await apiFetch<{
           user: string;
           is_account_confirmed: boolean;
-        }>("/auth/google", { idToken });
+        }>("/auth/google", { idToken, refreshToken });
 
         this.user = res.user;
         this.isAccountConfirmed = res.is_account_confirmed;
@@ -132,6 +135,7 @@ export const useAuthStore = defineStore("auth", {
         this.isConfirmed = false;
 
         localStorage.setItem("user", JSON.stringify(this.user));
+        this.signInCookie()
       } catch (error: any) {
         this.user = "";
         this.isAccountConfirmed = false;
@@ -141,6 +145,7 @@ export const useAuthStore = defineStore("auth", {
         snackbarStore.showSnackbar(getErrorMessage(error), "error");
         localStorage.removeItem("user");
         console.error(error);
+        throw error;
       }
     },
 

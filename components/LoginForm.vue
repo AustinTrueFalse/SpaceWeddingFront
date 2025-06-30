@@ -3,7 +3,7 @@
     <v-row>
       <v-col class="d-flex justify-center align-center">
         <v-card class="login-form" rounded="xl" variant="flat">
-          <v-btn color="red darken-1" @click="authStore.signInWithGoogle" dark>
+          <v-btn color="red darken-1" @click="signInGoogle()" dark>
             <v-icon left>mdi-google</v-icon>
             Войти через Google
           </v-btn>
@@ -100,16 +100,32 @@ const authStore = useAuthStore();
 const router = useRouter(); // Инициализация роутера
 
 const signIn = async () => {
-  const user: SignInData = {
-    email: email.value,
-    password: password.value,
-  };
+  try {
+    const user: SignInData = {
+      email: email.value,
+      password: password.value,
+    };
 
-  await authStore.signIn(user);
+    await authStore.signIn(user);
 
-  if (authStore.user) {
-    // Если авторизация успешна, перенаправляем на главную страницу "/"
-    router.push("/");
+    if (authStore.user) {
+      // Если авторизация успешна, перенаправляем на главную страницу "/"
+      router.push("/");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const signInGoogle = async () => {
+  try {
+    await authStore.signInWithGoogle();
+    if (authStore.user) {
+      // Если авторизация успешна, перенаправляем на главную страницу "/"
+      router.push("/");
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>
