@@ -5,7 +5,6 @@
         <InputTextRaw
           v-model="selectedEvent.eventName"
           label="Название мероприятия"
-         
         />
         <v-row justify="center" class="mt-15">
           <v-col cols="3">
@@ -13,7 +12,7 @@
               :model-value="selectedDate"
               :onUpdate="(value: Date) => (selectedDate = value)"
               label="Дата мероприятия"
-              :bg-color="themeColors.primary"
+              bg-color="primary"
             ></DatePicker>
           </v-col>
           <v-col cols="3">
@@ -21,7 +20,7 @@
               v-model="selectedEvent.eventTime"
               time
               label="Время мероприятия"
-              :bg-color="themeColors.primary"
+              bg-color="primary"
             />
           </v-col>
         </v-row>
@@ -72,7 +71,6 @@
                       isSelected ? 'purple-accent-1' : 'grey-light',
                     ]"
                     height="200"
-                    dark
                     rounded="xl"
                     @click="toggle"
                   >
@@ -112,12 +110,16 @@
               >Тайминг
               <ButtonIcon
                 mdi-icon="mdi-plus"
-                :color="themeColors.accent"
+                
                 :click-function="addTiming"
               />
             </v-card-title>
           </v-col>
         </v-row>
+        <v-row justify="center">
+          <v-col> </v-col>
+        </v-row>
+
         <v-row justify="center">
           <v-col cols="10">
             <InputTextDouble
@@ -129,52 +131,106 @@
               :first-label="'Время'"
               :second-label="'Описание'"
               :readonly="false"
-              :bg-color="themeColors.primary"
+              bg-color="primary"
             >
               <ButtonIcon
                 class="mb-5"
                 mdi-icon="mdi-close"
-                :color="themeColors.error"
+                color="accent"
                 :click-function="() => deleteTiming(item.id)"
               />
             </InputTextDouble>
           </v-col>
         </v-row>
+        <v-card-title class="mt-15 text-center main-title"
+          >Цвета<ColorPicker @updateColor="addEventColor" />
+        </v-card-title>
+
+        <v-row justify="center" class="pt-3">
+          <div
+            v-if="eventColors.length === 0"
+            class="text-center header-font increase-font mt-10"
+          >
+            Добавьте цвета вашей свадьбы
+          </div>
+          <v-col cols="12">
+            <v-row>
+              <v-col v-for="color in eventColors" class="pa-0 ma-0 mt-5">
+                <v-card
+                  rounded="xl"
+                  :color="color"
+                  height="250"
+                  class="mx-2"
+                  style="position: relative"
+                >
+                  <v-btn
+                    variant="tonal"
+                    
+                    @click="deleteEventColor(color)"
+                    style="
+                      position: absolute;
+                      top: 10px;
+                      right: 10px;
+                      z-index: 1;
+                    "
+                  >
+                    <v-icon size="large">mdi-close</v-icon>
+                  </v-btn>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
         <v-row justify="center">
-          <v-col>
+          <v-col cols="5">
             <v-card-title class="mt-15 text-center main-title"
               >Напитки</v-card-title
             >
           </v-col>
+          <v-col cols="5">
+            <v-card-title class="mt-15 text-center main-title"
+              >Тэги гостей</v-card-title
+            >
+          </v-col>
         </v-row>
         <v-row justify="center">
-          <v-col cols="10">
+          <v-col cols="5">
             <Combobox
               v-model="selectedEvent.eventDrinks"
               :items="eventStore.drinksDictionary"
               item-label="drinkName"
-              item-value="Id"
-              label="Выберите напитки"
+              item-value="id"
+              label="Выберите или введите свои"
+            />
+          </v-col>
+          <v-col cols="5">
+            <Combobox
+              v-model="selectedEvent.eventTags"
+              :items="eventStore.tagsDictionary"
+              item-label="tagName"
+              item-value="id"
+              label="Выберите или введите свои"
             />
           </v-col>
         </v-row>
+
         <v-row justify="center">
-          <v-col cols="10">
+          <v-col cols="5">
             <ButtonDefault
               class="mt-15 mb-5 w-100"
-              text="Просмотреть"
-              :color="themeColors.primary"
+              text="Просмотреть приглашение"
+              color="primary"
               :loading-status="eventStore.loadingStatuses.eventCreate"
-              :click-function="createEvent"
+              :click-function="openInvitePreview"
             />
           </v-col>
         </v-row>
         <v-row justify="center" class="mt-0">
-          <v-col cols="10">
+          <v-col cols="5">
             <ButtonDefault
               class="mb-5 w-100"
-              text="Создать"
-              :colorStops="gradientSettings"
+              :text="buttonCreateText"
+     
               :loading-status="eventStore.loadingStatuses.eventCreate"
               :click-function="createEvent"
             />
@@ -183,27 +239,32 @@
       </v-col>
     </v-row>
   </v-container>
+  <InvitePreviewDialog />
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useEventStore } from "@/stores/event";
-import { themeColors, gradientSettings } from "@/config/themeConfig";
+import { useDialogStore } from "@/stores/dialog";
 
-import InputText from "./components/template/InputText.vue";
-import InputTextRaw from "./components/template/InputTextRaw.vue";
-import InputTextDouble from "./components/template/InputTextDouble.vue";
-import ButtonDefault from "./components/template/ButtonDefault.vue";
-import ButtonIcon from "./template/ButtonIcon.vue";
-import DatePicker from "./components/template/DatePicker.vue";
-import YandexMap from "./components/template/YandexMap.vue";
-import Combobox from "./components/template/Combobox.vue";
+
+import ColorPicker from "@/components/template/ColorPicker.vue";
+import InputText from "@/components/template/InputText.vue";
+import InputTextRaw from "@/components/template/InputTextRaw.vue";
+import InputTextDouble from "@/components/template/InputTextDouble.vue";
+import ButtonDefault from "@/components/template/ButtonDefault.vue";
+import ButtonIcon from "@/components/template/ButtonIcon.vue";
+import DatePicker from "@/components/template/DatePicker.vue";
+import YandexMap from "@/components/template/YandexMap.vue";
+import Combobox from "@/components/template/Combobox.vue";
+
+import InvitePreviewDialog from "@/components/invites/InvitePreviewDialog.vue";
 
 const router = useRouter();
 
 const eventStore = useEventStore();
+const dialogStore = useDialogStore();
 
 const selectedEvent = computed(() => eventStore.selectedEvent);
 
@@ -219,11 +280,34 @@ const selectedDesign = computed({
   },
 });
 
+const buttonCreateText = computed(() => {
+  return eventStore.selectedEvent.id ? "Сохранить" : "Создать";
+});
+
+const eventColors = computed(() => {
+  return eventStore.selectedEvent.eventInvite.colorsInfo?.colors;
+});
+
 onMounted(async () => {
   await eventStore.getDesigns();
   await eventStore.getDrinks();
+  await eventStore.getTags();
   await eventStore.getGuestStatuses();
 });
+
+const addEventColor = (color: string) => {
+  const isColorExist = eventColors.value.some(
+    (eventColor) => eventColor === color
+  );
+
+  if (!isColorExist) {
+    eventStore.addEventColor(color);
+  }
+};
+
+const deleteEventColor = (color: string) => {
+  eventStore.deleteEventColor(color);
+};
 
 const addTiming = () => {
   eventStore.addTiming();
@@ -234,12 +318,17 @@ const deleteTiming = (id: string) => {
 };
 
 const createEvent = async () => {
-  await eventStore.createEvent();
-  router.push("/dashboard");
+  if (eventStore.selectedEvent.id) {
+    await eventStore.updateEvent(eventStore.selectedEvent.id);
+    router.push(`/event/${eventStore.selectedEvent.id}`);
+  } else {
+    await eventStore.createEvent();
+    router.push("/dashboard");
+  }
 };
 
-const backToDashboard = () => {
-  router.push("/dashboard");
+const openInvitePreview = () => {
+  dialogStore.showDialog("invitePreview");
 };
 </script>
 

@@ -1,10 +1,14 @@
 <template>
-  <v-dialog v-model="dialogStore.isVisible" :width="width" dark>
+  <v-dialog
+    v-model="dialogStore.isVisible"
+    :width="width"
+    @update:modelValue="onDialogClose"
+  >
     <v-card rounded="xl">
       <!-- Заголовок -->
-      <v-card-title class="d-flex justify-space-between align-center">
+      <v-card-title class="d-flex justify-space-between align-center pl-8 pt-5">
         {{ title }}
-        <v-btn icon flat @click="closeDialog">
+        <v-btn icon variant="text" color="primary" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -36,5 +40,12 @@ const props = defineProps({
 // Закрытие диалога
 const closeDialog = () => {
   dialogStore.hideDialog();
+};
+
+// Если диалог закрыли "извне" (например, клик вне окна)
+const onDialogClose = (newValue) => {
+  if (!newValue) {
+    dialogStore.hideDialog();
+  }
 };
 </script>

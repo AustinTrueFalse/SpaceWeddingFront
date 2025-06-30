@@ -26,6 +26,11 @@ export const useGuestStore = defineStore("guest", {
       guestPhone: "",
       guestStatus: "",
       guestDrinks: [],
+      guestTag: {
+        id: "-1",
+        tagName: "",
+      },
+      guestDescr: "",
     },
 
     loadingStatuses: {
@@ -36,6 +41,23 @@ export const useGuestStore = defineStore("guest", {
   }),
 
   actions: {
+    resetGuest() {
+      this.guest = {
+        id: "",
+        created: new Date(),
+        updated: new Date(),
+        eventId: "",
+        guestName: "",
+        guestPhone: "",
+        guestStatus: "",
+        guestDrinks: [],
+        guestTag: {
+          id: "-1",
+          tagName: "",
+        },
+        guestDescr: "",
+      };
+    },
     async addGuestAuth(eventId: string) {
       try {
         this.loadingStatuses.guestAdd = true;
@@ -46,6 +68,8 @@ export const useGuestStore = defineStore("guest", {
           guestPhone: this.guest.guestPhone,
           guestStatus: this.guest.guestStatus,
           guestDrinks: this.guest.guestDrinks,
+          guestTag: this.guest.guestTag,
+          guestDescr: this.guest.guestDescr,
         });
 
         this.loadingStatuses.guestAdd = false;
@@ -55,7 +79,6 @@ export const useGuestStore = defineStore("guest", {
         this.loadingStatuses.guestAdd = false;
         console.error(error);
         throw error;
-        
       }
     },
     async addGuest(eventId: string) {
@@ -68,6 +91,8 @@ export const useGuestStore = defineStore("guest", {
           guestPhone: this.guest.guestPhone,
           guestStatus: this.guest.guestStatus,
           guestDrinks: this.guest.guestDrinks,
+          guestTag: this.guest.guestTag,
+          guestDescr: this.guest.guestDescr,
         });
 
         this.loadingStatuses.guestAdd = false;
@@ -89,6 +114,8 @@ export const useGuestStore = defineStore("guest", {
           guestPhone: this.guest.guestPhone,
           guestStatus: this.guest.guestStatus,
           guestDrinks: this.guest.guestDrinks,
+          guestTag: this.guest.guestTag,
+          guestDescr: this.guest.guestDescr,
         });
 
         this.loadingStatuses.guestAdd = false;
@@ -100,6 +127,7 @@ export const useGuestStore = defineStore("guest", {
         throw error;
       }
     },
+
     async deleteGuest(guestId: string, eventId: string) {
       try {
         this.loadingStatuses.guestAdd = true;
@@ -111,6 +139,8 @@ export const useGuestStore = defineStore("guest", {
           guestPhone: this.guest.guestPhone,
           guestStatus: this.guest.guestStatus,
           guestDrinks: this.guest.guestDrinks,
+          guestTag: this.guest.guestTag,
+          guestDescr: this.guest.guestDescr,
         });
 
         this.loadingStatuses.guestAdd = false;

@@ -17,7 +17,7 @@
               <v-text-field
                 v-model="email"
                 class="pt-5"
-                color="transparent"
+                
                 rounded="xl"
                 label="Email"
                 variant="outlined"
@@ -64,7 +64,19 @@
               </NuxtLink>
             </v-col>
           </v-row>
+         
+          <v-row justify="center">
+            <v-col cols="10">
+              <NuxtLink to="/password_send">
+                <ButtonDefault
+                  class="mb-5 w-100"
+                  text="Забыл пароль"
+                ></ButtonDefault>
+              </NuxtLink>
+            </v-col>
+          </v-row>
         </v-card>
+        
       </v-col>
     </v-row>
   </v-container>
@@ -75,7 +87,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router"; // Импортируем роутер
 import { useAuthStore } from "../stores/auth";
 
-import ButtonDefault from "./components/template/ButtonDefault.vue";
+import ButtonDefault from "@/components/template/ButtonDefault.vue";
 
 import type { SignInData } from "../types/auth";
 

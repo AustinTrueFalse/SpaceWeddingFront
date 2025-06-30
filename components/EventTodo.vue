@@ -1,37 +1,67 @@
 <template>
-  <v-container max-width="1000px" class="mb-15">
-    <v-row>
-      <v-col cols="12">
-        <v-text-field
-          v-model="newTaskName"
-          label="New Task"
-          outlined
-        ></v-text-field>
-        <v-btn color="primary" @click="addTask">Add Task</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col
-        v-for="task in eventStore.selectedEvent.todoList"
-        :key="task.id"
-        cols="12"
-        sm="6"
-        md="4"
+  <v-card
+    rounded="xl"
+    class="event-card h-100 custom-scrollbar"
+    style="max-height: 500px"
+  >
+    <v-card-title class="text-center pt-4">Список задач</v-card-title>
+
+    <v-card-text
+      class="custom-scrollbar"
+      style="overflow: auto; max-height: 400px"
+    >
+      <v-text-field
+        v-model="newTaskName"
+        class="pt-4"
+        label="Новая задача"
+        variant="outlined"
+        rounded="xl"
       >
-        <v-card>
-          <v-card-title>{{ task.name }}</v-card-title>
-          <v-card-actions>
-            <v-checkbox
-              v-model="task.completed"
-              :label="'Completed'"
-              @update:modelValue="(value) => updateTaskStatus(task.id, value)"
-            ></v-checkbox>
-            <v-btn color="red" @click="deleteTask(task.id)">Delete</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+        <template v-slot:append-inner>
+          <v-icon
+            
+            class="mr-1"
+            size="25px"
+            @click="addTask"
+          >
+            mdi-plus
+          </v-icon>
+        </template>
+      </v-text-field>
+
+      <v-row>
+        <v-col>
+          <v-card
+            v-for="task in eventStore.selectedEvent.todoList"
+            :key="task.id"
+            rounded="xl"
+            variant="plain"
+          >
+            <v-card-title class="d-flex justify-space-between align-center">
+              <div class="d-flex align-center">
+                <v-checkbox
+                  v-model="task.completed"
+                  density="compact"
+                  hide-details
+                  @update:modelValue="
+                    (value: any) => updateTaskStatus(task.id, value)
+                  "
+                ></v-checkbox>
+                <span class="ml-2 text-body-2">{{ task.name }}</span>
+              </div>
+              <v-icon
+                
+                size="25px"
+                @click="deleteTask(task.id)"
+              >
+                mdi-delete
+              </v-icon>
+            </v-card-title>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -39,7 +69,6 @@ import { ref, watch } from "vue";
 
 import { useRoute } from "vue-router";
 import { useEventStore } from "@/stores/event";
-import { themeColors, gradientSettings } from "@/config/themeConfig";
 
 const route = useRoute();
 
@@ -53,8 +82,6 @@ const eventId = route.params.id as string;
 watch(
   () => eventStore.selectedEvent.todoList,
   () => {
-    console.log("todoList изменился:");
-
     // Вызываем метод из Pinia, например, для синхронизации данных
     eventStore.updateTodo(eventId);
   },

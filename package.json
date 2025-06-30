@@ -10,21 +10,32 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.2.6",
     "@mdi/font": "^7.4.47",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/i18n": "^9.5.3",
     "@pinia/nuxt": "^0.5.5",
+    "@tiptap/core": "^2.11.7",
+    "@tiptap/starter-kit": "^2.11.7",
+    "@tiptap/vue-3": "^2.11.7",
+    "avatar-editor": "^1.1.0",
     "axios": "^1.7.7",
+    "file-saver": "^2.0.5",
     "firebase": "^11.0.1",
     "nuxt": "^3.13.2",
     "pinia": "^2.2.4",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vue-yandex-maps": "^2.1.6",
-    "vuetify": "^3.7.7",
-    "vuetify-nuxt-module": "^0.18.3"
+    "vuetify-nuxt-module": "^0.18.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nuxt/types": "^2.18.1",
-    "@nuxt/typescript-build": "^3.0.2"
+    "@nuxt/typescript-build": "^3.0.2",
+    "@types/file-saver": "^2.0.7",
+    "sass-embedded": "^1.86.3",
+    "vite-plugin-vuetify": "^2.1.1",
+    "vuetify": "^3.8.2"
   }
 }

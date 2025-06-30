@@ -5,6 +5,8 @@ import type { GuestStatus } from "./guestStatus";
 import type { Timing } from "./timing";
 import type { Couple } from "./couple";
 import type { Todo } from "./todo";
+import type { Tag } from "./tag";
+import type { Invite } from "./invite";
 
 export interface Event {
   id: string;
@@ -12,17 +14,19 @@ export interface Event {
   eventName: string;
   eventDate: Date;
   eventTime: string;
-  eventDesignId: number;
+  eventDesignId: string
   eventLocation: string;
-  eventDrinks: Drink [];
-  eventTiming: Timing [];
+  eventDrinks: Drink[];
+  eventTags: Tag[];
+  eventTiming: Timing[];
   eventCouple: Couple;
-  guestStatuses: GuestStatus [];
+  guestStatuses: GuestStatus[];
   userId: string;
   hostId: string;
   guests: Guest[];
   todoList: Todo[];
   allowedUsers: User[];
+  eventInvite: Invite;
 }
 
 export interface EventDesign {

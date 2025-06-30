@@ -12,19 +12,19 @@
     </v-card-title>
     <v-card-text class="pa-0 ma-0">
       <div v-if="iconName" class="event-card-icon-container">
-        <v-icon class="large-icon">{{ iconName }}</v-icon>
+        <v-icon class="large-icon" color="primary">{{ iconName }}</v-icon>
       </div>
       <v-row class="ml-0">
         <v-col>
           <v-card-title class="date-time-text">
             {{ eventDate }}
-          </v-card-title></v-col
-        >
-        <v-col
-          ><v-card-title class="date-time-text">
+          </v-card-title>
+        </v-col>
+        <v-col>
+          <v-card-title class="date-time-text">
             {{ eventTime }}
-          </v-card-title></v-col
-        >
+          </v-card-title>
+        </v-col>
       </v-row>
     </v-card-text>
   </v-card>
@@ -79,5 +79,5 @@ const handleClick = () => {
 </script>
 
 <style scoped>
-
+/* твои стили */
 </style>

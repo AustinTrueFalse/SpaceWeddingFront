@@ -82,9 +82,8 @@
 import { ref, computed } from "vue";
 import { useAuthStore } from "../stores/auth";
 
-import ButtonDefault from "./components/template/ButtonDefault.vue";
-import InputText from "./components/template/InputText.vue";
-
+import ButtonDefault from "@//components/template/ButtonDefault.vue";
+import InputText from "@/components/template/InputText.vue";
 import type { RegisterData } from "../types/auth";
 
 import { validationRules } from "@/helpers/validationRules";

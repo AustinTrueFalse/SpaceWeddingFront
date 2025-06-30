@@ -11,6 +11,7 @@ import type { GuestStatus } from "@/types/guestStatus";
 import type { Timing } from "@/types/timing";
 import type { Guest } from "@/types/guest";
 import type { Todo } from "@/types/todo";
+import type { Tag } from "@/types/tag";
 
 interface LoadingStatuses {
   [key: string]: boolean;
@@ -21,6 +22,7 @@ interface EventState {
   selectedEvent: Event;
   designList: Design[];
   drinksDictionary: Drink[];
+  tagsDictionary: Tag[];
   loadingStatuses: LoadingStatuses;
 }
 
@@ -34,9 +36,10 @@ export const useEventStore = defineStore("event", {
       eventName: "",
       eventTime: "",
       eventDate: new Date(),
-      eventDesignId: 0,
+      eventDesignId: "",
       eventLocation: "",
       eventDrinks: [],
+      eventTags: [],
       eventTiming: [
         {
           id: "1",
@@ -56,7 +59,9 @@ export const useEventStore = defineStore("event", {
       ],
       eventCouple: {
         groomName: "",
+        groomBlank: "",
         brideName: "",
+        brideBlank: "",
       },
       guestStatuses: [],
       userId: "",
@@ -64,8 +69,38 @@ export const useEventStore = defineStore("event", {
       guests: [],
       todoList: [],
       allowedUsers: [],
+      eventInvite: {
+        header: "",
+        mainPhoto: "",
+        secondPhoto: "",
+        locationInfo: {
+          header: "",
+          text: "",
+        },
+        colorsInfo: {
+          header: "",
+          colors: [],
+          manInfo: {
+            header: "",
+            text: "",
+          },
+          womanInfo: {
+            header: "",
+            text: "",
+          },
+        },
+        bottomInfo: {
+          header: "",
+          text: "",
+          subtext: "",
+        },
+        footerInfo: {
+          text: "",
+        },
+      },
     },
     drinksDictionary: [],
+    tagsDictionary: [],
     loadingStatuses: {
       eventCreate: false,
       eventList: false,
@@ -74,6 +109,7 @@ export const useEventStore = defineStore("event", {
       designList: false,
       drinksDictionary: false,
       guestList: false,
+      guestsUpdate: false,
     },
   }),
   getters: {
@@ -86,6 +122,18 @@ export const useEventStore = defineStore("event", {
       state.selectedEvent.guests.filter((g) => g.guestStatus === "3").length,
   },
   actions: {
+    addEventColor(color: string) {
+      this.selectedEvent.eventInvite.colorsInfo.colors.push(color);
+    },
+    deleteEventColor(color: string) {
+      this.selectedEvent.eventInvite.colorsInfo.colors =
+        this.selectedEvent.eventInvite.colorsInfo.colors.filter(
+          (existingColor) => existingColor !== color
+        );
+    },
+    resetEventList() {
+      this.eventList = [];
+    },
     resetSelectedEvent() {
       this.selectedEvent = {
         id: "",
@@ -93,9 +141,10 @@ export const useEventStore = defineStore("event", {
         eventName: "",
         eventTime: "",
         eventDate: new Date(),
-        eventDesignId: 0,
+        eventDesignId: "",
         eventLocation: "",
         eventDrinks: [],
+        eventTags: [],
         eventTiming: [
           {
             id: "1",
@@ -115,7 +164,9 @@ export const useEventStore = defineStore("event", {
         ],
         eventCouple: {
           groomName: "",
+          groomBlank: "",
           brideName: "",
+          brideBlank: "",
         },
         guestStatuses: [],
         userId: "",
@@ -123,6 +174,35 @@ export const useEventStore = defineStore("event", {
         guests: [],
         todoList: [],
         allowedUsers: [],
+        eventInvite: {
+          header: "",
+          mainPhoto: "",
+          secondPhoto: "",
+          locationInfo: {
+            header: "",
+            text: "",
+          },
+          colorsInfo: {
+            header: "",
+            colors: [],
+            manInfo: {
+              header: "",
+              text: "",
+            },
+            womanInfo: {
+              header: "",
+              text: "",
+            },
+          },
+          bottomInfo: {
+            header: "",
+            text: "",
+            subtext: "",
+          },
+          footerInfo: {
+            text: "",
+          },
+        },
       };
     },
     setDate(value: Date) {
@@ -170,15 +250,43 @@ export const useEventStore = defineStore("event", {
           eventLocation: this.selectedEvent.eventLocation,
           eventDesignId: this.selectedEvent.eventDesignId,
           eventDrinks: this.selectedEvent.eventDrinks,
+          eventTags: this.selectedEvent.eventTags,
           eventTiming: this.selectedEvent.eventTiming,
           eventCouple: this.selectedEvent.eventCouple,
           guestStatuses: this.selectedEvent.guestStatuses,
+          eventInvite: this.selectedEvent.eventInvite,
         });
 
         this.loadingStatuses.eventCreate = false;
         const snackbarStore = useSnackbarStore();
         snackbarStore.showSnackbar("Мероприятие создано", "success");
       } catch (error: any) {
+        this.loadingStatuses.eventCreate = false;
+        console.error(error);
+      }
+    },
+    async updateEvent(eventId: string) {
+      try {
+        this.loadingStatuses.eventCreate = true;
+        await apiFetch("api/events/update", {
+          eventName: this.selectedEvent.eventName,
+          eventDate: this.selectedEvent.eventDate,
+          eventTime: this.selectedEvent.eventTime,
+          eventLocation: this.selectedEvent.eventLocation,
+          eventDesignId: this.selectedEvent.eventDesignId,
+          eventDrinks: this.selectedEvent.eventDrinks,
+          eventTags: this.selectedEvent.eventTags,
+          eventTiming: this.selectedEvent.eventTiming,
+          eventCouple: this.selectedEvent.eventCouple,
+          guestStatuses: this.selectedEvent?.guestStatuses,
+          eventInvite: this.selectedEvent.eventInvite,
+          eventId: eventId,
+        });
+
+        this.getEventById(eventId);
+        // this.getEvents();
+        this.loadingStatuses.eventCreate = false;
+      } catch (error) {
         this.loadingStatuses.eventCreate = false;
         console.error(error);
       }
@@ -200,6 +308,17 @@ export const useEventStore = defineStore("event", {
         const res = await apiFetch<Event>("api/events/id", {
           eventId: eventId,
         });
+
+        // Преобразование даты
+        if (res.eventDate) {
+          res.eventDate = new Date(res.eventDate);
+        }
+
+        // Преобразование даты
+        if (res.created) {
+          res.created = new Date(res.created);
+        }
+
         this.selectedEvent = res;
         this.loadingStatuses.selecetedEvent = false;
       } catch (error) {
@@ -227,6 +346,18 @@ export const useEventStore = defineStore("event", {
         this.loadingStatuses.drinksDictionary = false;
       } catch (error) {
         this.loadingStatuses.drinksDictionary = false;
+        console.error(error);
+      }
+    },
+    async getTags() {
+      try {
+        this.tagsDictionary = [];
+        this.loadingStatuses.tagsDictionary = true;
+        const res = await apiFetch<Tag[]>("api/guests/tags");
+        this.tagsDictionary = res;
+        this.loadingStatuses.tagsDictionary = false;
+      } catch (error) {
+        this.loadingStatuses.tagsDictionary = false;
         console.error(error);
       }
     },
@@ -270,28 +401,22 @@ export const useEventStore = defineStore("event", {
         console.error(error);
       }
     },
-    async updateEvent(eventId: string) {
+
+    async updateGuestList() {
       try {
-        this.loadingStatuses.eventDelete = true;
-        await apiFetch("api/events/update", {
-          eventName: this.selectedEvent.eventName,
-          eventDate: this.selectedEvent.eventDate,
-          eventTime: this.selectedEvent.eventTime,
-          eventLocation: this.selectedEvent.eventLocation,
-          eventDesignId: this.selectedEvent.eventDesignId,
-          eventDrinks: this.selectedEvent.eventDrinks,
-          eventTiming: this.selectedEvent.eventTiming,
-          eventCouple: this.selectedEvent.eventCouple,
-          guestStatuses: this.selectedEvent?.guestStatuses,
-          eventId: eventId,
+        this.loadingStatuses.guestsUpdate = true;
+
+        await apiFetch("api/guests/update_list", {
+          guests: this.selectedEvent.guests,
         });
 
-        this.getEventById(eventId);
-        // this.getEvents();
-        this.loadingStatuses.eventDelete = false;
-      } catch (error) {
-        this.loadingStatuses.eventDelete = false;
+        this.loadingStatuses.guestsUpdate = false;
+        const snackbarStore = useSnackbarStore();
+        snackbarStore.showSnackbar("Гость записан", "success");
+      } catch (error: any) {
+        this.loadingStatuses.guestsUpdate = false;
         console.error(error);
+        throw error;
       }
     },
     addTodoTask(name: string) {
@@ -300,9 +425,6 @@ export const useEventStore = defineStore("event", {
         name: name,
         completed: false,
       };
-
-      console.log(name)
-      console.log(newTask)
 
       this.selectedEvent.todoList.push(newTask);
     },
@@ -324,18 +446,13 @@ export const useEventStore = defineStore("event", {
     },
     async updateTodo(eventId: string) {
       try {
-        // this.loadingStatuses.eventCreate = true;
-
         await apiFetch("api/events/update_todo", {
           eventId,
           todoList: this.selectedEvent.todoList,
         });
 
         this.loadingStatuses.eventCreate = false;
-        const snackbarStore = useSnackbarStore();
-        snackbarStore.showSnackbar("Туду обновлен", "success");
       } catch (error: any) {
-        // this.loadingStatuses.eventCreate = false;
         console.error(error);
       }
     },

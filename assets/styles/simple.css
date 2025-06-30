@@ -1,0 +1,156 @@
+@font-face {
+  font-family: "Orlando";
+  src: url("../styles/fonts/OrlandoCapsCG.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.main-font {
+  font-family: "Orlando", sans-serif !important;
+  font-size: 150px;
+  line-height: 0.8;
+}
+
+.main-font-spacing {
+  letter-spacing: -10px;
+}
+
+.header-font {
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.1;
+}
+
+.header-font-small {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.text-font-xs {
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.timing-font {
+  font-family: "Orlando", sans-serif;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.header-font-orlando {
+  font-family: "Orlando", sans-serif;
+  font-size: 70px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.custom-card {
+  height: 400px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rotated-text {
+  font-size: 70px !important;
+  transform: rotate(-90deg) !important;
+}
+
+.rotated-text-reverse {
+  font-size: 70px !important;
+  transform: rotate(90deg);
+  letter-spacing: 5px;
+}
+
+.letter-spacing {
+  letter-spacing: 40px !important;
+}
+
+.letter-spacing-small {
+  letter-spacing: 20px !important;
+}
+
+.background-color {
+  background-color: #0a0a0a !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.small-dot {
+  font-size: 3px !important;
+}
+
+.block-height {
+  min-height: 600px;
+}
+
+.rectangle {
+  height: 30px; /* Высота прямоугольника */
+  width: 100%;
+  margin-top: 5px; /* Расстояние между прямоугольниками */
+}
+
+.rounded-snackbar {
+  border-radius: 59%; /* Здесь вы можете установить желаемый радиус закругления углов */
+}
+
+.max-width-frame {
+  max-width: 1200px !important;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .increase-font {
+    font-size: 20px !important;
+  }
+
+  .increase-font-small {
+    font-size: 16px;
+  }
+
+  .increase-text-font-xs {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    line-height: 1.1;
+  }
+
+  .increase-timing-font {
+    font-family: "Orlando", sans-serif;
+    font-size: 20px !important;
+    line-height: 1.1;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .decriase-font {
+    font-size: 50px !important;
+  }
+  .decriase-main-font {
+    font-size: 110px !important;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .decriase-font {
+    font-size: 40px !important;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .decriase-font-bingo {
+    font-size: 13px !important;
+  }
+}

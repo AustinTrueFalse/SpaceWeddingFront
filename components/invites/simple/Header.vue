@@ -1,71 +1,91 @@
 <template>
-  <v-container class="pa-0 pb-5 mb-10">
-    <v-sheet> ДАТА!!! {{ eventDate }} </v-sheet>
+  <v-container>
     <v-row justify="space-between" class="pt-10">
-      <v-col cols="1">
+      <v-col>
         <v-row class="pb-10">
           <v-col>
-            <v-sheet> THIS IS </v-sheet>
-            <v-sheet> SIMPLE </v-sheet>
-            <v-sheet> DESIGN </v-sheet>
+            <div class="text-left header-font increase-font">SAVE</div>
+            <div class="text-left header-font increase-font">THE</div>
+            <div class="text-left header-font increase-font">DATE</div>
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="11">
-        
+      <v-col>
+        <div class="text-right main-font decriase-main-font pa-0 pl-15 pr-3">
+          {{ formattedDate.day }}
+        </div>
       </v-col>
     </v-row>
     <v-row justify="space-between">
       <v-col cols="12">
-        <v-sheet> AUG </v-sheet>
+        <div
+          class="text-right main-font decriase-main-font main-font-spacing pa-0 pr-3"
+        >
+          {{ formattedDate.month }}
+        </div>
       </v-col>
     </v-row>
     <v-row justify="space-between">
       <v-col cols="6">
         <v-row class="">
-          <v-col c>
-            <v-sheet>
-              MAKSIM
+          <v-col>
+            <div class="text-left header-font increase-font pt-10">
+              {{ formattedEventCouple.brideNameUpper }}
               <v-icon class="small-dot">mdi-circle</v-icon>
-              VIOLA
-            </v-sheet>
-            <v-sheet> WEDDING </v-sheet>
+              {{ formattedEventCouple.groomNameUpper }}
+            </div>
+            <div class="text-left header-font increase-font pt-2">
+              WEDDING
+            </div>
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="6">
-        <v-sheet> 24 </v-sheet>
+        <div class="text-right main-font decriase-main-font pa-0 pr-3">
+          {{ formattedDate.year }}
+        </div>
       </v-col>
     </v-row>
     <v-row justify="space-between">
-      <v-col cols="6">
-        <v-row>
-          <v-col class="text-left pl-10">
-            <v-sheet> ДОРОГИЕ </v-sheet>
-            <v-sheet> ДРУЗЬЯ И РОДНЫЕ </v-sheet>
-            <v-sheet>
-              В нашей жизни скоро состоится важное событие - свадьба!
-            </v-sheet>
-            <v-sheet>
-              Мы будем очень рады, если вы разделите этот особенный день с нами!
-            </v-sheet>
-          </v-col>
-        </v-row>
+      <v-col class="pa-0 pr-5 pt-5" cols="6">
+        <MainPhoto />
       </v-col>
-      <v-col cols="6"> </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
+import { computed, defineProps } from "vue";
 
+import { useEventStore } from "@/stores/event";
 
+const eventStore = useEventStore();
 
-const props = defineProps({
-  eventDate: {
-    type: String,
-    required: true,
-  }
-})
+const formattedDate = computed(() => {
+  const date = new Date(eventStore.selectedEvent.eventDate);
+
+  const day = date.getDate();
+  const month = date
+    .toLocaleString("en-US", { month: "short" })
+    .toLocaleUpperCase(); // три буквы на английском
+  const year = date.getFullYear() % 100; // берём последние две цифры года
+
+  return {
+    day,
+    month,
+    year,
+  };
+});
+
+const formattedEventCouple = computed(() => {
+  const brideNameUpper =
+    eventStore.selectedEvent.eventCouple.brideName.toUpperCase();
+  const groomNameUpper =
+    eventStore.selectedEvent.eventCouple.groomName.toUpperCase();
+
+  return {
+    brideNameUpper,
+    groomNameUpper,
+  };
+});
 </script>

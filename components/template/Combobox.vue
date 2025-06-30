@@ -1,7 +1,7 @@
 <template>
   <v-combobox
     v-model="model"
-    :items="items"
+    :items="computedItems"
     :item-title="itemLabel"
     :item-value="itemValue"
     :label="label"
@@ -9,10 +9,10 @@
     clearable
     variant="outlined"
     rounded="xl"
-    item-color="orange-darken-1"
+    :color="color"
     class="custom-combobox"
     style="min-height: 100px"
-    @update:model-value="filterInput"
+    @keydown.enter.prevent="handleEnter"
     :allow-new="false"
   >
     <template v-slot:selection="{ item }">
@@ -36,29 +36,48 @@ const props = defineProps<{
   loadingStatus?: boolean;
   itemLabel: string;
   itemValue: string;
+  color: string;
 }>();
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "update:items"]);
 
 const model = computed({
   get: () => props.modelValue,
   set: (value) => emit("update:modelValue", value),
 });
 
-// Фильтрация, чтобы не добавлять произвольный текст, но сохранять выбранные элементы
-const filterInput = (newValue: any[]) => {
-  const filtered = newValue.filter((item) =>
-    props.items.some(
-      (existingItem) =>
-        existingItem[props.itemValue] === item || existingItem === item
-    )
-  );
-  emit("update:modelValue", filtered);
+const computedItems = computed(() => {
+  return [
+    ...props.items,
+    ...model.value.filter((item) => !props.items.includes(item)),
+  ];
+});
+
+const handleEnter = (event: KeyboardEvent) => {
+  const input = (event.target as HTMLInputElement).value.trim();
+  if (!input) return;
+
+  const numericIds = computedItems.value
+    .map((item) => parseInt(item[props.itemValue], 10))
+    .filter((id) => !isNaN(id));
+
+  const newId = numericIds.length > 0 ? Math.max(...numericIds) + 1 : 1;
+
+  const newItem = {
+    [props.itemValue]: newId.toString(),
+    [props.itemLabel]: input,
+  };
+
+  // Добавляем в списки
+  emit("update:items", [...props.items, newItem]);
+  emit("update:modelValue", [...props.modelValue, newItem]);
+
+  // Очищаем поле ввода
+  (event.target as HTMLInputElement).value = "";
 };
 </script>
 
 <style>
-/* Увеличение размера вводимого текста */
 .v-combobox .v-field .v-field__input > input {
   font-size: 16px !important;
   padding-top: 10px !important;

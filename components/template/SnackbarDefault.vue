@@ -2,7 +2,7 @@
   <v-snackbar v-model="snackbarStore.isVisible" :color="snackbarStore.color">
     {{ snackbarStore.message }}
     <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbarStore.hideSnackbar">
+      <v-btn variant="text" @click="snackbarStore.hideSnackbar">
         Закрыть
       </v-btn>
     </template>

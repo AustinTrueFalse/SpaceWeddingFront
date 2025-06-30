@@ -29,7 +29,7 @@ interface CheckboxItem {
 }
 
 const props = defineProps<{
-  items: CheckboxItem[]; // Список элементов для чекбоксов
+  items: CheckboxItem[]; // Список объектов для чекбоксов
   modelValue: (string | number)[]; // Массив выбранных значений
   title: string;
 }>();

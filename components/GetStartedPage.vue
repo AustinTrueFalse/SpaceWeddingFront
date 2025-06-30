@@ -9,7 +9,7 @@
       <v-col cols="8" class="d-flex justify-center align-center">
         <v-btn
           prepend-icon="mdi-chevron-right"
-          color="indigo"
+          
           size="large"
           rounded="lg"
           @click="getStarted"

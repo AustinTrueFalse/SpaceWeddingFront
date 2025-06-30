@@ -22,11 +22,6 @@
   font-family: "San Francisco", "Inter", sans-serif;
 }
 
-/* Vuetify settings */
-.custom-dark-background {
-  background-color: #020313 !important; /* Чернильный цвет */
-}
-
 /* Get started page */
 .main-title {
   font-size: 50px;
@@ -62,21 +57,10 @@
 }
 
 /* Карточки с градиентом */
-.event-card {
+/* .event-card {
   background: linear-gradient(135deg, #1a1a50, #0a0a26) !important;
   color: white !important;
-}
-
-/* Текст даты и времени */
-.date-time-text {
-  color: #8a8aff !important;
-}
-
-.chip-field-label {
-  font-size: 18px;
-  color: #8a8aff; /* Цвет текста для заголовка */
-  margin-bottom: 4px; /* Отступ между заголовком и чипом */
-}
+} */
 
 .field-chip {
   width: 100%;
@@ -94,7 +78,28 @@
   text-decoration: none;
 }
 
+.v-expansion-panel-text__wrapper {
+  padding: 0px 0px 0px !important;
+}
 
+/* ToDo */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* Узкий ползунок */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Цвет ползунка */
+  border-radius: 6px; /* Округлые края */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Темнее при наведении */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Прозрачный фон */
+}
 
 /* EventCard */
 

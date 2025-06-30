@@ -4,7 +4,7 @@
       <v-col
         ><v-combobox
           class="text-input"
-          bg-color="#1A1A50"
+         
           v-model="suggest"
           :items="transformedSuggestResponse ?? []"
           :item-value="(item: any) => item.key"

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import EventEdit from "./components/EventEdit.vue";
+import EventEdit from "@/components/EventEdit.vue";
 
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";

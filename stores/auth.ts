@@ -5,6 +5,7 @@ import { useSnackbarStore } from "../stores/snackbar";
 import { getErrorMessage } from "../helpers/errorHandler";
 
 import type { SignInData, RegisterData } from "../types/auth";
+import type PasswordReset from "@/components/auth/PasswordReset.vue";
 
 interface LoadingStatuses {
   [key: string]: boolean;
@@ -39,6 +40,9 @@ export const useAuthStore = defineStore("auth", {
       verifyEmailStatus: false,
       resendEmailStatus: false,
       checkUserName: false,
+      changeAvatar: false,
+      sendEmailPasswordReset: false,
+      passwordReset: false,
     },
   }),
 
@@ -160,7 +164,37 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
       }
     },
+    async sendEmailPasswordReset(email: string) {
+      const snackbarStore = useSnackbarStore();
+      try {
+        this.loadingStatuses.sendEmailPasswordReset = true;
+        // Передаём email в теле запроса
+        await apiFetch("/auth/send_email_password_reset", { email });
 
+        this.loadingStatuses.sendEmailPasswordReset = false;
+        snackbarStore.showSnackbar("Письмо отправлено", "success");
+      } catch (error: any) {
+        this.loadingStatuses.sendEmailPasswordReset = false;
+        snackbarStore.showSnackbar("Ошибка отправки письма", "error");
+        console.error(error);
+        throw new Error(error);
+      }
+    },
+    async passwordReset(oobCode: string, newPassword: string) {
+      const snackbarStore = useSnackbarStore();
+      try {
+        this.loadingStatuses.passwordReset = true;
+        // Передаём oobCode в теле запроса
+        await apiFetch("/auth/reset_password", { oobCode, newPassword });
+
+        this.loadingStatuses.passwordReset = false;
+        snackbarStore.showSnackbar("Новый пароль установлен", "success");
+      } catch (error: any) {
+        this.loadingStatuses.passwordReset = false;
+        snackbarStore.showSnackbar("Ошибка сброса пароля", "success");
+        console.error(error);
+      }
+    },
     async checkUsername(username: string) {
       try {
         this.loadingStatuses.checkUserName = true;
@@ -182,7 +216,7 @@ export const useAuthStore = defineStore("auth", {
       await apiFetch("/auth/signout");
       this.user = "";
       this.isAccountConfirmed = false;
-      
+
       localStorage.removeItem("user");
     },
   },

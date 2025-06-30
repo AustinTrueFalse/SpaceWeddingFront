@@ -1,12 +1,7 @@
 <template>
   <div>
-    <v-card-title class="chip-field-label">{{ label }}</v-card-title>
-    <v-chip
-      class="field-chip"
-      size="x-large"
-      color="deep-purple-lighten-5"
-      text-color="white"
-    >
+    <v-card-title>{{ label }}</v-card-title>
+    <v-chip size="x-large" text-color="white">
       {{ text }}
     </v-chip>
   </div>
@@ -26,4 +21,3 @@ const props = defineProps({
   },
 });
 </script>
-

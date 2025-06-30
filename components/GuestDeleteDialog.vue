@@ -2,22 +2,23 @@
   <DialogDefault
     v-if="dialogStore.type === 'guestDelete'"
     title="Вы уверены что хотите удалить гостя?"
+    width="450px"
   >
-    <v-row justify="center" class="pt-10">
-      <v-col cols="6">
+    <v-row justify="center" class="pt-2">
+      <v-col cols="5" class="pb-0">
         <ButtonDefault
           class="mb-5 w-100"
           text="Удалить"
           :loading-status="guestStore.loadingStatuses.guestAdd"
           :click-function="deleteGuest"
-          :colorStops="gradientSettings"
+          color="error"
         ></ButtonDefault>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="5" class="pb-0">
         <ButtonDefault
           class="mb-5 w-100"
           text="Отмена"
-          :loading-status="guestStore.loadingStatuses.guestAdd"
+          
           :click-function="hideDialog"
         ></ButtonDefault>
       </v-col>
@@ -30,10 +31,9 @@ import { useRoute } from "vue-router";
 import { useEventStore } from "@/stores/event";
 import { useGuestStore } from "@/stores/guest";
 import { useDialogStore } from "@/stores/dialog";
-import { themeColors, gradientSettings } from "@/config/themeConfig";
 
-import DialogDefault from "./components/template/DialogDefault.vue";
-import ButtonDefault from "./components/template/ButtonDefault.vue";
+import DialogDefault from "@/components/template/DialogDefault.vue";
+import ButtonDefault from "@/components/template/ButtonDefault.vue";
 
 // Получаем маршрут
 const route = useRoute();
