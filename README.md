@@ -1,6 +1,6 @@
 ## 📅 Event Management Application
 
-**IN DEVELOPMENT NOW!!!**
+**🚧 IN DEVELOPMENT NOW!!!**
 
 A modern web application designed to streamline the **creation, invitation, and tracking** of events.
 
