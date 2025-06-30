@@ -1,8 +1,14 @@
 ## 📅 Event Management Application
 
+**IN DEVELOPMENT NOW!!!**
+
 A modern web application designed to streamline the **creation, invitation, and tracking** of events.
 
+
 ### ✨ Key Features:
+
+
+
 - **Event Creation**: Easily create and manage events with customizable details such as date, time, location, and description.
 - **Invitation System**: Send personalized invitations to guests and manage RSVP statuses.
 - **Event Analytics**: Track attendance and monitor guest responses to gain insights into event effectiveness.
