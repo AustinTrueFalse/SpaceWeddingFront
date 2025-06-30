@@ -4,6 +4,9 @@ import apiFetch from "../api";
 import { useSnackbarStore } from "../stores/snackbar";
 import { getErrorMessage } from "../helpers/errorHandler";
 
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../firebase.client"
+
 import type { SignInData, RegisterData } from "../types/auth";
 import type PasswordReset from "@/components/auth/PasswordReset.vue";
 
@@ -99,6 +102,36 @@ export const useAuthStore = defineStore("auth", {
         if (this.user) {
           localStorage.setItem("user", JSON.stringify(this.user));
         }
+      } catch (error: any) {
+        this.user = "";
+        this.isAccountConfirmed = false;
+        this.loadingStatuses.signInStatus = false;
+
+        const snackbarStore = useSnackbarStore();
+        snackbarStore.showSnackbar(getErrorMessage(error), "error");
+        localStorage.removeItem("user");
+        console.error(error);
+      }
+    },
+    async signInWithGoogle() {
+      try {
+        this.loadingStatuses.signInStatus = true;
+
+        const result = await signInWithPopup(auth, googleProvider);
+        const idToken = await result.user.getIdToken();
+
+        const res = await apiFetch<{
+          user: string;
+          is_account_confirmed: boolean;
+        }>("/auth/google", { idToken });
+
+        this.user = res.user;
+        this.isAccountConfirmed = res.is_account_confirmed;
+        this.error = "";
+        this.loadingStatuses.signInStatus = false;
+        this.isConfirmed = false;
+
+        localStorage.setItem("user", JSON.stringify(this.user));
       } catch (error: any) {
         this.user = "";
         this.isAccountConfirmed = false;

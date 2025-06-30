@@ -9,6 +9,9 @@ dist
 # Node dependencies
 node_modules
 
+nuxt.config.ts
+firebase.client.ts
+
 # Logs
 logs
 *.log

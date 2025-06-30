@@ -3,6 +3,10 @@
     <v-row>
       <v-col class="d-flex justify-center align-center">
         <v-card class="login-form" rounded="xl" variant="flat">
+          <v-btn color="red darken-1" @click="authStore.signInWithGoogle" dark>
+            <v-icon left>mdi-google</v-icon>
+            Войти через Google
+          </v-btn>
           <v-card-title
             v-if="authStore.isConfirmed"
             class="d-flex justify-center pt-8"
@@ -17,7 +21,6 @@
               <v-text-field
                 v-model="email"
                 class="pt-5"
-                
                 rounded="xl"
                 label="Email"
                 variant="outlined"
@@ -64,7 +67,7 @@
               </NuxtLink>
             </v-col>
           </v-row>
-         
+
           <v-row justify="center">
             <v-col cols="10">
               <NuxtLink to="/password_send">
@@ -76,7 +79,6 @@
             </v-col>
           </v-row>
         </v-card>
-        
       </v-col>
     </v-row>
   </v-container>
