@@ -25,6 +25,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
         return; // Оставляем пользователя на главной странице
       }
+    } else {
+      // Добавляем периодическую проверку актуальности пользователя
+      await authStore.checkUser(); // Новый метод в хранилище
     }
   } else {
     console.log("Middleware выполняется на сервере, пропускаем signInCookie");

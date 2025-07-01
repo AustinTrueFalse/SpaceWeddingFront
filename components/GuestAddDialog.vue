@@ -82,7 +82,7 @@ const dialogStore = useDialogStore();
 const eventId = route.params.id as string;
 
 // Вычисляем текущий ивент
-const currentEvent = computed(() => eventStore.selectedEvent);
+const currentEvent = computed(() => eventStore.selectedEventCurrent);
 
 // Вычисляем список напитков
 const drinkListItems = computed(() => {

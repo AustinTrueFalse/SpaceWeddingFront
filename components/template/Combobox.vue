@@ -36,7 +36,7 @@ const props = defineProps<{
   loadingStatus?: boolean;
   itemLabel: string;
   itemValue: string;
-  color: string;
+  color?: string;
 }>();
 
 const emit = defineEmits(["update:modelValue", "update:items"]);

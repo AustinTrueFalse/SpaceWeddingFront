@@ -62,7 +62,7 @@ import { useEventStore } from "@/stores/event";
 const eventStore = useEventStore();
 
 const formattedDate = computed(() => {
-  const date = new Date(eventStore.selectedEvent.eventDate);
+  const date = new Date(eventStore.selectedEventCurrent.eventDate);
 
   const day = date.getDate();
   const month = date
@@ -79,9 +79,9 @@ const formattedDate = computed(() => {
 
 const formattedEventCouple = computed(() => {
   const brideNameUpper =
-    eventStore.selectedEvent.eventCouple.brideName.toUpperCase();
+    eventStore.selectedEventCurrent.eventCouple.brideName.toUpperCase();
   const groomNameUpper =
-    eventStore.selectedEvent.eventCouple.groomName.toUpperCase();
+    eventStore.selectedEventCurrent.eventCouple.groomName.toUpperCase();
 
   return {
     brideNameUpper,

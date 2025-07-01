@@ -1,5 +1,15 @@
 <template>
   <v-container max-width="1000px" class="mb-15">
+    <v-row>
+      <v-col>
+        <ButtonIcon
+          class="mb-5"
+          mdi-icon="mdi-arrow-left"
+          color="accent"
+          :click-function="exitFromEdit"
+        />
+      </v-col>
+    </v-row>
     <v-row justify="center">
       <v-col>
         <InputTextRaw
@@ -34,7 +44,7 @@
         <v-row justify="center">
           <v-col cols="10">
             <YandexMap
-              v-model="eventStore.selectedEvent.eventLocation"
+              v-model="eventStore.selectedEventCurrent.eventLocation"
               label="Местоположение"
             />
           </v-col>
@@ -108,11 +118,7 @@
           <v-col>
             <v-card-title class="mt-15 text-center main-title"
               >Тайминг
-              <ButtonIcon
-                mdi-icon="mdi-plus"
-                
-                :click-function="addTiming"
-              />
+              <ButtonIcon mdi-icon="mdi-plus" :click-function="addTiming" />
             </v-card-title>
           </v-col>
         </v-row>
@@ -165,7 +171,6 @@
                 >
                   <v-btn
                     variant="tonal"
-                    
                     @click="deleteEventColor(color)"
                     style="
                       position: absolute;
@@ -230,9 +235,18 @@
             <ButtonDefault
               class="mb-5 w-100"
               :text="buttonCreateText"
-     
               :loading-status="eventStore.loadingStatuses.eventCreate"
               :click-function="createEvent"
+            />
+          </v-col>
+        </v-row>
+        <v-row justify="center" class="mt-0">
+          <v-col cols="5">
+            <ButtonDefault
+              class="mb-5 w-100"
+              text="Отмена"
+              color="red"
+              :click-function="exitFromEdit"
             />
           </v-col>
         </v-row>
@@ -247,7 +261,6 @@ import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useEventStore } from "@/stores/event";
 import { useDialogStore } from "@/stores/dialog";
-
 
 import ColorPicker from "@/components/template/ColorPicker.vue";
 import InputText from "@/components/template/InputText.vue";
@@ -266,26 +279,26 @@ const router = useRouter();
 const eventStore = useEventStore();
 const dialogStore = useDialogStore();
 
-const selectedEvent = computed(() => eventStore.selectedEvent);
+const selectedEvent = computed(() => eventStore.selectedEventCurrent);
 
 const selectedDate = computed({
-  get: () => eventStore.selectedEvent.eventDate,
+  get: () => eventStore.selectedEventCurrent.eventDate,
   set: (value: Date) => eventStore.setDate(value),
 });
 
 const selectedDesign = computed({
-  get: () => eventStore.selectedEvent.eventDesignId,
+  get: () => eventStore.selectedEventCurrent.eventDesignId,
   set: (design) => {
-    eventStore.selectedEvent.eventDesignId = design;
+    eventStore.selectedEventCurrent.eventDesignId = design;
   },
 });
 
 const buttonCreateText = computed(() => {
-  return eventStore.selectedEvent.id ? "Сохранить" : "Создать";
+  return eventStore.selectedEventCurrent.id ? "Сохранить" : "Создать";
 });
 
 const eventColors = computed(() => {
-  return eventStore.selectedEvent.eventInvite.colorsInfo?.colors;
+  return eventStore.selectedEventCurrent.eventInvite.colorsInfo?.colors;
 });
 
 onMounted(async () => {
@@ -318,11 +331,20 @@ const deleteTiming = (id: string) => {
 };
 
 const createEvent = async () => {
-  if (eventStore.selectedEvent.id) {
-    await eventStore.updateEvent(eventStore.selectedEvent.id);
-    router.push(`/event/${eventStore.selectedEvent.id}`);
+  if (eventStore.selectedEventCurrent.id) {
+    await eventStore.updateEvent(eventStore.selectedEventCurrent.id);
+    router.push(`/event/${eventStore.selectedEventCurrent.id}`);
   } else {
     await eventStore.createEvent();
+    router.push("/dashboard");
+  }
+};
+
+const exitFromEdit = () => {
+  if (eventStore.selectedEventCurrent.id) {
+    eventStore.resetCurrentToOriginal()
+    router.push(`/event/${eventStore.selectedEventCurrent.id}`);
+  } else {
     router.push("/dashboard");
   }
 };

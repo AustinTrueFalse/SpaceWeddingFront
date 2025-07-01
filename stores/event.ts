@@ -1,10 +1,11 @@
 // stores/auth.ts
 import { defineStore } from "pinia";
+import { cloneDeep, isEqual } from "lodash-es";
 import { ref } from "vue";
 import apiFetch from "../api";
 import { useSnackbarStore } from "./snackbar";
 
-import type { Event } from "@/types/event";
+import { type Event, initialEventState } from "@/types/event";
 import type { Design } from "@/types/design";
 import type { Drink } from "@/types/drink";
 import type { GuestStatus } from "@/types/guestStatus";
@@ -19,7 +20,8 @@ interface LoadingStatuses {
 
 interface EventState {
   eventList: Event[];
-  selectedEvent: Event;
+  selectedEventCurrent: Event;
+  selectedEventOriginal: Event;
   designList: Design[];
   drinksDictionary: Drink[];
   tagsDictionary: Tag[];
@@ -30,75 +32,8 @@ export const useEventStore = defineStore("event", {
   state: (): EventState => ({
     designList: [],
     eventList: [],
-    selectedEvent: {
-      id: "",
-      created: new Date(),
-      eventName: "",
-      eventTime: "",
-      eventDate: new Date(),
-      eventDesignId: "",
-      eventLocation: "",
-      eventDrinks: [],
-      eventTags: [],
-      eventTiming: [
-        {
-          id: "1",
-          time: "18:00",
-          description: "Встреча на площадке",
-        },
-        {
-          id: "1",
-          time: "18:00",
-          description: "Церемония",
-        },
-        {
-          id: "1",
-          time: "19:00",
-          description: "Ужин",
-        },
-      ],
-      eventCouple: {
-        groomName: "",
-        groomBlank: "",
-        brideName: "",
-        brideBlank: "",
-      },
-      guestStatuses: [],
-      userId: "",
-      hostId: "",
-      guests: [],
-      todoList: [],
-      allowedUsers: [],
-      eventInvite: {
-        header: "",
-        mainPhoto: "",
-        secondPhoto: "",
-        locationInfo: {
-          header: "",
-          text: "",
-        },
-        colorsInfo: {
-          header: "",
-          colors: [],
-          manInfo: {
-            header: "",
-            text: "",
-          },
-          womanInfo: {
-            header: "",
-            text: "",
-          },
-        },
-        bottomInfo: {
-          header: "",
-          text: "",
-          subtext: "",
-        },
-        footerInfo: {
-          text: "",
-        },
-      },
-    },
+    selectedEventCurrent: { ...initialEventState },
+    selectedEventOriginal: { ...initialEventState },
     drinksDictionary: [],
     tagsDictionary: [],
     loadingStatuses: {
@@ -113,130 +48,74 @@ export const useEventStore = defineStore("event", {
     },
   }),
   getters: {
-    eventGuestCount: (state) => state.selectedEvent.guests.length,
+    eventGuestCount: (state) => state.selectedEventCurrent.guests.length,
     eventGuestComeCount: (state) =>
-      state.selectedEvent.guests.filter((g) => g.guestStatus === "1").length,
+      state.selectedEventCurrent.guests.filter((g) => g.guestStatus === "1")
+        .length,
     eventGuestNotComeCount: (state) =>
-      state.selectedEvent.guests.filter((g) => g.guestStatus === "2").length,
+      state.selectedEventCurrent.guests.filter((g) => g.guestStatus === "2")
+        .length,
     eventGuestUnknownComeCount: (state) =>
-      state.selectedEvent.guests.filter((g) => g.guestStatus === "3").length,
+      state.selectedEventCurrent.guests.filter((g) => g.guestStatus === "3")
+        .length,
   },
   actions: {
     addEventColor(color: string) {
-      this.selectedEvent.eventInvite.colorsInfo.colors.push(color);
+      this.selectedEventCurrent.eventInvite.colorsInfo.colors.push(color);
     },
     deleteEventColor(color: string) {
-      this.selectedEvent.eventInvite.colorsInfo.colors =
-        this.selectedEvent.eventInvite.colorsInfo.colors.filter(
+      this.selectedEventCurrent.eventInvite.colorsInfo.colors =
+        this.selectedEventCurrent.eventInvite.colorsInfo.colors.filter(
           (existingColor) => existingColor !== color
         );
     },
     resetEventList() {
       this.eventList = [];
     },
+    setSelectedEvent(event: Event) {
+      this.selectedEventCurrent = cloneDeep(event);
+      this.selectedEventOriginal = cloneDeep(event);
+    },
     resetSelectedEvent() {
-      this.selectedEvent = {
-        id: "",
-        created: new Date(),
-        eventName: "",
-        eventTime: "",
-        eventDate: new Date(),
-        eventDesignId: "",
-        eventLocation: "",
-        eventDrinks: [],
-        eventTags: [],
-        eventTiming: [
-          {
-            id: "1",
-            time: "18:00",
-            description: "Встреча на площадке",
-          },
-          {
-            id: "2",
-            time: "18:30",
-            description: "Церемония",
-          },
-          {
-            id: "3",
-            time: "19:00",
-            description: "Ужин",
-          },
-        ],
-        eventCouple: {
-          groomName: "",
-          groomBlank: "",
-          brideName: "",
-          brideBlank: "",
-        },
-        guestStatuses: [],
-        userId: "",
-        hostId: "",
-        guests: [],
-        todoList: [],
-        allowedUsers: [],
-        eventInvite: {
-          header: "",
-          mainPhoto: "",
-          secondPhoto: "",
-          locationInfo: {
-            header: "",
-            text: "",
-          },
-          colorsInfo: {
-            header: "",
-            colors: [],
-            manInfo: {
-              header: "",
-              text: "",
-            },
-            womanInfo: {
-              header: "",
-              text: "",
-            },
-          },
-          bottomInfo: {
-            header: "",
-            text: "",
-            subtext: "",
-          },
-          footerInfo: {
-            text: "",
-          },
-        },
-      };
+      this.setSelectedEvent({ ...initialEventState });
+    },
+    resetCurrentToOriginal() {
+      if (this.selectedEventOriginal) {
+        this.selectedEventCurrent = cloneDeep(this.selectedEventOriginal);
+      }
     },
     setDate(value: Date) {
-      this.selectedEvent.eventDate = value; // Обновление даты
+      this.selectedEventCurrent.eventDate = value; // Обновление даты
     },
     addTiming() {
-      const maxId = this.selectedEvent.eventTiming.reduce(
+      const maxId = this.selectedEventCurrent.eventTiming.reduce(
         (max, timing) => Math.max(max, parseInt(timing.id, 10) || 0),
         0
       );
-      this.selectedEvent.eventTiming.push({
+      this.selectedEventCurrent.eventTiming.push({
         id: (maxId + 1).toString(),
         time: "",
         description: "",
       });
     },
     updateTimingTime(id: string, time: string) {
-      const timing = this.selectedEvent.eventTiming.find((d) => d.id === id);
+      const timing = this.selectedEventCurrent.eventTiming.find((d) => d.id === id);
       if (timing) {
         timing.time = time;
       }
     },
     updateTimingDescr(id: string, descr: string) {
-      const timing = this.selectedEvent.eventTiming.find((d) => d.id === id);
+      const timing = this.selectedEventCurrent.eventTiming.find((d) => d.id === id);
       if (timing) {
         timing.description = descr;
       }
     },
     deleteTiming(id: string) {
-      const index = this.selectedEvent.eventTiming.findIndex(
+      const index = this.selectedEventCurrent.eventTiming.findIndex(
         (d) => d.id === id
       );
       if (index !== -1) {
-        this.selectedEvent.eventTiming.splice(index, 1);
+        this.selectedEventCurrent.eventTiming.splice(index, 1);
       }
     },
     async createEvent() {
@@ -244,17 +123,17 @@ export const useEventStore = defineStore("event", {
         this.loadingStatuses.eventCreate = true;
 
         await apiFetch("api/events/add", {
-          eventName: this.selectedEvent.eventName,
-          eventDate: this.selectedEvent.eventDate,
-          eventTime: this.selectedEvent.eventTime,
-          eventLocation: this.selectedEvent.eventLocation,
-          eventDesignId: this.selectedEvent.eventDesignId,
-          eventDrinks: this.selectedEvent.eventDrinks,
-          eventTags: this.selectedEvent.eventTags,
-          eventTiming: this.selectedEvent.eventTiming,
-          eventCouple: this.selectedEvent.eventCouple,
-          guestStatuses: this.selectedEvent.guestStatuses,
-          eventInvite: this.selectedEvent.eventInvite,
+          eventName: this.selectedEventCurrent.eventName,
+          eventDate: this.selectedEventCurrent.eventDate,
+          eventTime: this.selectedEventCurrent.eventTime,
+          eventLocation: this.selectedEventCurrent.eventLocation,
+          eventDesignId: this.selectedEventCurrent.eventDesignId,
+          eventDrinks: this.selectedEventCurrent.eventDrinks,
+          eventTags: this.selectedEventCurrent.eventTags,
+          eventTiming: this.selectedEventCurrent.eventTiming,
+          eventCouple: this.selectedEventCurrent.eventCouple,
+          guestStatuses: this.selectedEventCurrent.guestStatuses,
+          eventInvite: this.selectedEventCurrent.eventInvite,
         });
 
         this.loadingStatuses.eventCreate = false;
@@ -269,17 +148,17 @@ export const useEventStore = defineStore("event", {
       try {
         this.loadingStatuses.eventCreate = true;
         await apiFetch("api/events/update", {
-          eventName: this.selectedEvent.eventName,
-          eventDate: this.selectedEvent.eventDate,
-          eventTime: this.selectedEvent.eventTime,
-          eventLocation: this.selectedEvent.eventLocation,
-          eventDesignId: this.selectedEvent.eventDesignId,
-          eventDrinks: this.selectedEvent.eventDrinks,
-          eventTags: this.selectedEvent.eventTags,
-          eventTiming: this.selectedEvent.eventTiming,
-          eventCouple: this.selectedEvent.eventCouple,
-          guestStatuses: this.selectedEvent?.guestStatuses,
-          eventInvite: this.selectedEvent.eventInvite,
+          eventName: this.selectedEventCurrent.eventName,
+          eventDate: this.selectedEventCurrent.eventDate,
+          eventTime: this.selectedEventCurrent.eventTime,
+          eventLocation: this.selectedEventCurrent.eventLocation,
+          eventDesignId: this.selectedEventCurrent.eventDesignId,
+          eventDrinks: this.selectedEventCurrent.eventDrinks,
+          eventTags: this.selectedEventCurrent.eventTags,
+          eventTiming: this.selectedEventCurrent.eventTiming,
+          eventCouple: this.selectedEventCurrent.eventCouple,
+          guestStatuses: this.selectedEventCurrent?.guestStatuses,
+          eventInvite: this.selectedEventCurrent.eventInvite,
           eventId: eventId,
         });
 
@@ -319,7 +198,8 @@ export const useEventStore = defineStore("event", {
           res.created = new Date(res.created);
         }
 
-        this.selectedEvent = res;
+        this.setSelectedEvent(res);
+
         this.loadingStatuses.selecetedEvent = false;
       } catch (error) {
         this.loadingStatuses.selecetedEvent = false;
@@ -367,9 +247,7 @@ export const useEventStore = defineStore("event", {
         const res = await apiFetch<Guest[]>("api/guests/list", {
           eventId: eventId,
         });
-        console.log(res);
-        this.selectedEvent.guests = res;
-        console.log(this.selectedEvent.guests);
+        this.selectedEventCurrent.guests = res;
         this.loadingStatuses.guestList = false;
       } catch (error) {
         this.loadingStatuses.guestList = false;
@@ -380,7 +258,7 @@ export const useEventStore = defineStore("event", {
       try {
         this.loadingStatuses.guestList = true;
         const res = await apiFetch<GuestStatus[]>("api/guests/visit_sts");
-        this.selectedEvent.guestStatuses = res;
+        this.selectedEventCurrent.guestStatuses = res;
         this.loadingStatuses.guestList = false;
       } catch (error) {
         this.loadingStatuses.guestList = false;
@@ -407,7 +285,7 @@ export const useEventStore = defineStore("event", {
         this.loadingStatuses.guestsUpdate = true;
 
         await apiFetch("api/guests/update_list", {
-          guests: this.selectedEvent.guests,
+          guests: this.selectedEventCurrent.guests,
         });
 
         this.loadingStatuses.guestsUpdate = false;
@@ -426,21 +304,21 @@ export const useEventStore = defineStore("event", {
         completed: false,
       };
 
-      this.selectedEvent.todoList.push(newTask);
+      this.selectedEventCurrent.todoList.push(newTask);
     },
     updateTodoTask(id: string, completed: boolean | null) {
-      const task = this.selectedEvent.todoList.find((task) => task.id === id);
+      const task = this.selectedEventCurrent.todoList.find((task) => task.id === id);
       if (task && completed !== null) {
         task.completed = completed;
       }
     },
     deleteTodoTask(id: string) {
-      const taskToRemove = this.selectedEvent.todoList.find(
+      const taskToRemove = this.selectedEventCurrent.todoList.find(
         (task) => task.id === id
       );
       if (!taskToRemove) return;
 
-      this.selectedEvent.todoList = this.selectedEvent.todoList.filter(
+      this.selectedEventCurrent.todoList = this.selectedEventCurrent.todoList.filter(
         (task) => task.id !== id
       );
     },
@@ -448,7 +326,7 @@ export const useEventStore = defineStore("event", {
       try {
         await apiFetch("api/events/update_todo", {
           eventId,
-          todoList: this.selectedEvent.todoList,
+          todoList: this.selectedEventCurrent.todoList,
         });
 
         this.loadingStatuses.eventCreate = false;

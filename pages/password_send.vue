@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import PasswordSend from "~/components/auth/PasswordSend.vue";
+import PasswordSend from '@/components/auth/PasswordSend.vue';
 
 export default {
   components: {

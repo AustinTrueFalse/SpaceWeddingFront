@@ -1,6 +1,5 @@
 <template>
-  <v-btn @click="onClick" icon :disabled="disabled" variant="plain">
-    <v-icon :color="color" size="x-large">{{ mdiIcon }}</v-icon>
+  <v-btn @click="onClick" icon :disabled="disabled" variant="text">
     <v-progress-circular
       v-if="loadingStatus"
       :size="20"
@@ -8,44 +7,29 @@
       color="primary"
       indeterminate
     ></v-progress-circular>
+    <v-icon v-else :color="color" size="x-large">{{ mdiIcon }}</v-icon>
   </v-btn>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+interface Props {
+  mdiIcon: string;
+  color?: string;
+  clickFunction: () => void;
+  disabled?: boolean;
+  loadingStatus?: boolean;
+}
 
-export default defineComponent({
-  props: {
-    mdiIcon: {
-      type: String,
-      default: "",
-    },
-    color: {
-      type: String,
-      default: "white",
-    },
-    clickFunction: {
-      type: Function,
-      required: false,
-      default: () => {},
-    },
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    loadingStatus: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-  methods: {
-    onClick() {
-      if (!this.loadingStatus) {
-        this.clickFunction();
-      }
-    },
-  },
+const props = withDefaults(defineProps<Props>(), {
+  mdiIcon: "",
+  clickFunction: () => {},
+  disabled: false,
+  loadingStatus: false,
 });
+
+const onClick = () => {
+  if (!props.loadingStatus) {
+    props.clickFunction();
+  }
+};
 </script>

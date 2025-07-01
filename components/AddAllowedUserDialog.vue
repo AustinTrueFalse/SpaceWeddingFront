@@ -16,7 +16,7 @@
       variant="flat"
       color="secondary"
     >
-      <div v-if="user.id !== eventStore.selectedEvent.userId">
+      <div v-if="user.id !== eventStore.selectedEventCurrent.userId">
         <v-card-title>{{ user.username }}</v-card-title>
         <v-card-subtitle>{{ user.email }}</v-card-subtitle>
         <v-card-actions

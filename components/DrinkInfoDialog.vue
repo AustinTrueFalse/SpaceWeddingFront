@@ -45,14 +45,14 @@ const dialogStore = useDialogStore();
 const eventId = route.params.id as string;
 
 // Вычисляем текущий ивент
-const currentEvent = computed(() => eventStore.selectedEvent);
+const currentEvent = computed(() => eventStore.selectedEventCurrent);
 
 const guestDrinks = computed(() => {
   // Массив для хранения результатов
   const drinksArray: { id: string; drinkName: string; guests: string[] }[] = [];
 
   // Проходим по каждому гостю и его напиткам
-  eventStore.selectedEvent.guests.forEach((guest) => {
+  eventStore.selectedEventCurrent.guests.forEach((guest) => {
     guest.guestDrinks.forEach((drink: Drink) => {
       // Ищем напиток в массиве
       const existingDrink = drinksArray.find(

@@ -73,7 +73,7 @@ const dialogStore = useDialogStore();
 const eventId = route.params.id as string;
 
 const guests = computed(() => {
-  return eventStore.selectedEvent.guests;
+  return eventStore.selectedEventCurrent.guests;
 });
 
 const updateGuestsDescr = async () => {

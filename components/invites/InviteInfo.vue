@@ -60,7 +60,7 @@ const containerStyles = {
 };
 
 // Получаем текущий ивент
-const currentEvent = computed(() => eventStore.selectedEvent);
+const currentEvent = computed(() => eventStore.selectedEventCurrent);
 
 // При монтировании получаем событие (если не предпросмотр)
 onMounted(async () => {

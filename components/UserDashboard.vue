@@ -1,20 +1,6 @@
 <template>
-  <v-container>
+  <v-container max-width="1400px">
     <v-row>
-      <!-- <v-col cols="2">
-        <v-avatar  size="300">
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"
-            cover
-          ></v-img>
-        </v-avatar>
-        <v-btn icon @click="openChangeAvatarDialog">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-
-        <ChipField class="mt-10" :text="'lavenetsky@gmail.com'" label="Email" />
-      </v-col>
-      <v-col cols="1"> </v-col> -->
       <v-col cols="12">
         <v-row>
           <v-col
@@ -53,11 +39,8 @@ import { useAuthStore } from "@/stores/auth";
 import { useDialogStore } from "@/stores/dialog";
 import { useRouter } from "vue-router";
 import EventCard from "@/components/EventCard.vue";
-import ChipField from "@/components/template/ChipField.vue";
-import UserAvatarDialog from "@/components/user/UserAvatarDialog.vue";
 
 const eventStore = useEventStore();
-const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const router = useRouter();
 

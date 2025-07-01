@@ -50,7 +50,7 @@ const eventStore = useEventStore();
 const dialogStore = useDialogStore();
 
 // Вычисляем текущий ивент
-const currentEvent = computed(() => eventStore.selectedEvent);
+const currentEvent = computed(() => eventStore.selectedEventCurrent);
 
 // Определяем тип анкеты из dialogStore (приводим к ключу EventCouple)
 const blankType = computed<keyof EventCouple | null>(() => {

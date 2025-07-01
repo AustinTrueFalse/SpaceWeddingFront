@@ -19,7 +19,7 @@
         <v-row
           justify="center"
           class="pt-3"
-          v-if="eventStore.selectedEvent.eventInvite"
+          v-if="eventStore.selectedEventCurrent.eventInvite"
         >
           <div
             v-if="eventColors.length === 0"
@@ -66,7 +66,7 @@ import { useEventStore } from "@/stores/event";
 const eventStore = useEventStore();
 
 const eventColors = computed(() => {
-  return eventStore.selectedEvent.eventInvite.colorsInfo?.colors;
+  return eventStore.selectedEventCurrent.eventInvite.colorsInfo?.colors;
 });
 
 const addEventColor = (color: string) => {

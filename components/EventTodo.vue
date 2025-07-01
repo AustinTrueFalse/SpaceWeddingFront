@@ -32,7 +32,7 @@
       <v-row>
         <v-col>
           <v-card
-            v-for="task in eventStore.selectedEvent.todoList"
+            v-for="task in eventStore.selectedEventCurrent.todoList"
             :key="task.id"
             rounded="xl"
             variant="plain"
@@ -80,7 +80,7 @@ const newTaskName = ref("");
 const eventId = route.params.id as string;
 
 watch(
-  () => eventStore.selectedEvent.todoList,
+  () => eventStore.selectedEventCurrent.todoList,
   () => {
     // Вызываем метод из Pinia, например, для синхронизации данных
     eventStore.updateTodo(eventId);

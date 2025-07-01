@@ -7,7 +7,7 @@
       <v-col cols="9">
         <div class="main-title d-flex align-center justify-space-between">
           <div>
-            {{ eventStore.selectedEvent.eventName }}
+            {{ eventStore.selectedEventCurrent.eventName }}
           </div>
           <div class="d-flex align-center">
             <v-btn
@@ -38,12 +38,12 @@
               <v-card width="265px">
                 <v-card-text>
                   <div
-                    v-for="user in eventStore.selectedEvent.allowedUsers"
+                    v-for="user in eventStore.selectedEventCurrent.allowedUsers"
                     :key="user.id"
                   >
                     <div
                       class="pl-1 mb-3"
-                      v-if="user.id === eventStore.selectedEvent.userId"
+                      v-if="user.id === eventStore.selectedEventCurrent.userId"
                     >
                       <v-icon color="primary" class="mr-1">mdi-creation</v-icon> Создано {{ user.username }}
                     </div>
@@ -81,7 +81,7 @@
             <v-row>
               <v-col>
                 <YandexMap
-                  v-model="eventStore.selectedEvent.eventLocation"
+                  v-model="eventStore.selectedEventCurrent.eventLocation"
                   label="Местоположение"
                   readonly
                   height="350px"
@@ -411,24 +411,24 @@ const eventId = route.params.id as string;
 
 const dateTime = computed(() => {
   return formatDateTime(
-    eventStore.selectedEvent.eventDate,
-    eventStore.selectedEvent.eventTime
+    eventStore.selectedEventCurrent.eventDate,
+    eventStore.selectedEventCurrent.eventTime
   );
 });
 
 const date = computed(() => {
-  return formatDate(eventStore.selectedEvent.eventDate);
+  return formatDate(eventStore.selectedEventCurrent.eventDate);
 });
 
 const guestStats = computed(() => {
-  return eventStore.selectedEvent.guestStatuses.map((status) => ({
+  return eventStore.selectedEventCurrent.guestStatuses.map((status) => ({
     ...status,
     count: getStatusCount(status.id),
   }));
 });
 
 const guests = computed(() => {
-  return eventStore.selectedEvent.guests;
+  return eventStore.selectedEventCurrent.guests;
 });
 
 const guestDrinks = computed(() => {
@@ -437,7 +437,7 @@ const guestDrinks = computed(() => {
     [];
 
   // Проходим по каждому гостю и его напиткам
-  eventStore.selectedEvent.guests.forEach((guest) => {
+  eventStore.selectedEventCurrent.guests.forEach((guest) => {
     guest.guestDrinks.forEach((drink: Drink) => {
       // Ищем напиток в массиве
       const existingDrink = drinksArray.find(
@@ -463,7 +463,7 @@ const guestDrinks = computed(() => {
 });
 
 const getStatusText = (status: string) => {
-  const sts = eventStore.selectedEvent.guestStatuses.find(
+  const sts = eventStore.selectedEventCurrent.guestStatuses.find(
     (s) => s.id === status
   );
   return sts?.status;
@@ -471,7 +471,7 @@ const getStatusText = (status: string) => {
 
 // Функция для определения цвета статуса
 const getStatusColor = (status: string) => {
-  const sts = eventStore.selectedEvent.guestStatuses.find(
+  const sts = eventStore.selectedEventCurrent.guestStatuses.find(
     (s) => s.id === status
   );
   return sts?.color;
@@ -508,11 +508,11 @@ const getStatusCount = (status: string) => {
 
 const exportGuestsToExcel = () => {
   {
-    const fileName = eventStore.selectedEvent.eventName;
+    const fileName = eventStore.selectedEventCurrent.eventName;
 
     const guestsData = guests.value.map((guest) => ({
       ...guest,
-      guestStatusDisplay: eventStore.selectedEvent.guestStatuses.find(
+      guestStatusDisplay: eventStore.selectedEventCurrent.guestStatuses.find(
         (sts) => sts.id === guest.guestStatus
       )?.status,
       guestDrinksDisplay: guest.guestDrinks

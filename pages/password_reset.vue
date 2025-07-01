@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import PasswordReset from "~/components/auth/PasswordReset.vue";
+import PasswordReset from '@/components/auth/PasswordReset.vue';
 
 export default {
   components: {

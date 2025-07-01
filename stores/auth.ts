@@ -5,7 +5,7 @@ import { useSnackbarStore } from "../stores/snackbar";
 import { getErrorMessage } from "../helpers/errorHandler";
 
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../firebase.client"
+import { auth, googleProvider } from "../firebase.client";
 
 import type { SignInData, RegisterData } from "../types/auth";
 import type PasswordReset from "@/components/auth/PasswordReset.vue";
@@ -17,6 +17,8 @@ interface LoadingStatuses {
 interface AuthState {
   authChecked: boolean;
   user: string;
+  userNameOriginal: string;
+  userNameCurrent: string;
   error: string;
   isUserNameValid: boolean;
   isAccountConfirmed: boolean | null;
@@ -26,10 +28,18 @@ interface AuthState {
   loadingStatuses: LoadingStatuses;
 }
 
+interface UserInfo {
+  user: string;
+  username: string;
+  is_account_confirmed: boolean;
+}
+
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
     authChecked: false,
     user: "",
+    userNameOriginal: "",
+    userNameCurrent: "",
     error: "",
     isUserNameValid: true,
     isAccountConfirmed: null,
@@ -46,20 +56,19 @@ export const useAuthStore = defineStore("auth", {
       changeAvatar: false,
       sendEmailPasswordReset: false,
       passwordReset: false,
+      updateUserName: false,
     },
   }),
 
   actions: {
-    async signInCookie() {
-      try {
-        this.loadingStatuses.signInStatus = true;
-
-        const res = await apiFetch<{
-          user: string;
-          is_account_confirmed: boolean;
-        }>("/auth/signin_cookie");
-
+    resetUserName() {
+      this.userNameCurrent = this.userNameOriginal
+    },
+    setUser(res: UserInfo) {
+      if (res) {
         this.user = res.user;
+        this.userNameCurrent = res.username;
+        this.userNameOriginal = res.username;
         this.isAccountConfirmed = res.is_account_confirmed;
         this.error = "";
         this.loadingStatuses.signInStatus = false;
@@ -69,13 +78,49 @@ export const useAuthStore = defineStore("auth", {
         if (this.user) {
           localStorage.setItem("user", JSON.stringify(this.user));
         }
+      } else {
+      }
+    },
+    resetUser() {
+      this.user = "";
+      this.userNameCurrent = "";
+      this.userNameOriginal = "";
+      this.isAccountConfirmed = false;
+      localStorage.removeItem("user");
+    },
+    async checkUser() {
+      try {
+        this.loadingStatuses.signInStatus = true;
+
+        const res = await apiFetch<UserInfo>("/auth/check_user");
+        this.setUser(res);
+        this.loadingStatuses.signInStatus = false;
       } catch (error: any) {
-        this.user = "";
-        this.isAccountConfirmed = false;
+        this.resetUser();
         this.loadingStatuses.signInStatus = false;
         const snackbarStore = useSnackbarStore();
         snackbarStore.showSnackbar(getErrorMessage(error), "error");
-        localStorage.removeItem("user");
+        console.error(error);
+      }
+    },
+    async signInCookie() {
+      try {
+        this.loadingStatuses.signInStatus = true;
+
+        const res = await apiFetch<{
+          user: string;
+          username: string;
+          is_account_confirmed: boolean;
+        }>("/auth/signin_cookie");
+
+        this.setUser(res);
+
+        this.loadingStatuses.signInStatus = false;
+      } catch (error: any) {
+        this.resetUser();
+        this.loadingStatuses.signInStatus = false;
+        const snackbarStore = useSnackbarStore();
+        snackbarStore.showSnackbar(getErrorMessage(error), "error");
         console.error(error);
       }
     },
@@ -85,31 +130,22 @@ export const useAuthStore = defineStore("auth", {
 
         const res = await apiFetch<{
           user: string;
+          username: string;
           is_account_confirmed: boolean;
         }>("/auth/signin", {
           email: user.email,
           password: user.password,
         });
 
-        console.log(res.is_account_confirmed);
-
-        this.user = res.user;
-        this.isAccountConfirmed = res.is_account_confirmed;
-        this.error = "";
+        this.setUser(res);
         this.loadingStatuses.signInStatus = false;
-        this.isConfirmed = false;
-        // Сохраняем пользователя в localStorage
-        if (this.user) {
-          localStorage.setItem("user", JSON.stringify(this.user));
-        }
       } catch (error: any) {
-        this.user = "";
-        this.isAccountConfirmed = false;
+        this.resetUser();
         this.loadingStatuses.signInStatus = false;
 
         const snackbarStore = useSnackbarStore();
         snackbarStore.showSnackbar(getErrorMessage(error), "error");
-        localStorage.removeItem("user");
+
         console.error(error);
         throw error;
       }
@@ -117,7 +153,6 @@ export const useAuthStore = defineStore("auth", {
     async signInWithGoogle() {
       try {
         this.loadingStatuses.signInStatus = true;
-        
 
         const result = await signInWithPopup(auth, googleProvider);
         const idToken = await result.user.getIdToken();
@@ -125,25 +160,21 @@ export const useAuthStore = defineStore("auth", {
 
         const res = await apiFetch<{
           user: string;
+          username: string;
           is_account_confirmed: boolean;
         }>("/auth/google", { idToken, refreshToken });
 
-        this.user = res.user;
-        this.isAccountConfirmed = res.is_account_confirmed;
-        this.error = "";
-        this.loadingStatuses.signInStatus = false;
-        this.isConfirmed = false;
+        this.setUser(res);
 
-        localStorage.setItem("user", JSON.stringify(this.user));
-        this.signInCookie()
+        this.signInCookie();
+        this.loadingStatuses.signInStatus = false;
       } catch (error: any) {
-        this.user = "";
-        this.isAccountConfirmed = false;
+        this.resetUser();
         this.loadingStatuses.signInStatus = false;
 
         const snackbarStore = useSnackbarStore();
         snackbarStore.showSnackbar(getErrorMessage(error), "error");
-        localStorage.removeItem("user");
+
         console.error(error);
         throw error;
       }
@@ -249,7 +280,22 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
       }
     },
+    async updateUsername(username: string) {
+      try {
+        this.loadingStatuses.updateUserName = true;
 
+        const res = await apiFetch<{ available: boolean }>(
+          "/auth/update_username",
+          { username, userId: this.user }
+        );
+
+        this.isUserNameValid = res.available;
+        this.loadingStatuses.updateUserName = false;
+      } catch (error: any) {
+        this.loadingStatuses.updateUserName = false;
+        console.error(error);
+      }
+    },
     async signOut() {
       await apiFetch("/auth/signout");
       this.user = "";

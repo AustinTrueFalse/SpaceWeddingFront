@@ -4,14 +4,14 @@
   </div>
 
   <YandexMap
-    v-model="eventStore.selectedEvent.eventLocation"
+    v-model="eventStore.selectedEventCurrent.eventLocation"
     label="Местоположение"
     readonly
     height="310px"
   />
   <div class="pl-5">
      <div class="header-font increase-font pt-8">
-      {{ eventStore.selectedEvent.eventLocation }}
+      {{ eventStore.selectedEventCurrent.eventLocation }}
     </div>
   </div>
 </template>

@@ -60,7 +60,7 @@ import { useEventStore } from "@/stores/event";
 const eventStore = useEventStore();
 
 const eventColors = computed(() => {
-  return eventStore.selectedEvent.eventInvite.colorsInfo?.colors;
+  return eventStore.selectedEventCurrent.eventInvite.colorsInfo?.colors;
 });
 
 const addEventColor = (color: string) => {
