@@ -1,6 +1,3 @@
-// api.ts
-const BASE_URL = "http://localhost:5000";
-
 import { showSnackbar } from "./helpers/snackbar";
 
 // Общая функция для выполнения API запросов
@@ -8,19 +5,21 @@ const apiFetch = async <T = unknown>(
   url: string,
   body: Record<string, unknown> = {}
 ): Promise<T> => {
+  const config = useRuntimeConfig();
+  const BASE_URL = (config.public.apiUrl as string) || "http://localhost:5000";
+
   try {
-    const response = await $fetch(url, {
-      baseURL: BASE_URL, // Используем статический baseURL
-      method: "POST", // Всегда используем метод POST
+    const response = await $fetch<T>(url, {
+      baseURL: BASE_URL,
+      method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body), // Убедитесь, что тело сериализуется в JSON
+      body: JSON.stringify(body),
     });
 
-    // Явное приведение типа результата, чтобы не ругалось на 'unknown'
-    return response as T;
+    return response;
   } catch (error: any) {
     showSnackbar(error, "error");
     console.log("Ошибка запроса", error);
