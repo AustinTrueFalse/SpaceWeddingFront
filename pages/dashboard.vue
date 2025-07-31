@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import UserDashboard from '@/components/UserDashboard.vue';
+import UserDashboard from '@/features/start/components/UserDashboard.vue';
 
 definePageMeta({
   middleware: "auth", // Применяем middleware auth

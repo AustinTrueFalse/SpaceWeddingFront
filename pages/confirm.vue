@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ConfirmAccount from '@/components/ConfirmAccount.vue';
+import ConfirmAccount from '@/features/auth/components/ConfirmAccount.vue';
 
 export default {
   components: {

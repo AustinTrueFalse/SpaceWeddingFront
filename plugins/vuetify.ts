@@ -42,28 +42,28 @@ export default defineNuxtPlugin((nuxtApp) => {
       themes: {
         dark: {
           colors: {
-            // ===== КОСМИЧЕСКИЕ ФОНЫ (осветленные на 15%) =====
-            background: "#12151E", // Было #0A0C1A → осветлено
-            surface: "#1D2345", // Было #151A30 → осветлено
+            // ===== КОСМИЧЕСКИЕ ФОНЫ  =====
+            background: "#12151E", 
+            surface: "#1D2345", 
             "surface-variant": "#28304D", // Для состояний hover/active
 
             // ===== АКЦЕНТНЫЕ ЦВЕТА =====
-            primary: "#4D6AFF", // Яркий космический синий (осветлен)
+            primary: "#4D6AFF", // Яркий космический синий 
             "primary-darken-1": "#3A56E0",
             secondary: "#24308B", // Глубокий ультрамарин
             "secondary-darken-1": "#1A2260",
 
             // ===== СИСТЕМНЫЕ ЦВЕТА =====
-            error: "#D32F2F", // Красный (немного осветлен)
+            error: "#D32F2F", // Красный 
             info: "#1976D2", // Синий для информации
             success: "#388E3C", // Зеленый
             warning: "#FFA000", // Янтарный
 
             // ===== ЦВЕТА ТЕКСТА =====
             "on-primary": "#FFFFFF",
-            "on-secondary": "#FFFFFF", // Светло-голубой
-            "on-surface": "#FFFFFF", // Светло-серый (осветлен)
-            "on-background": "#FFFFFF", // Лавандово-серый
+            "on-secondary": "#FFFFFF", 
+            "on-surface": "#FFFFFF", 
+            "on-background": "#FFFFFF", 
             "on-error": "#FFFFFF",
           },
         },

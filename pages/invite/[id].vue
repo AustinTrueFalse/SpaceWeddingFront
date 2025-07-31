@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import InviteInfo from "~/components/invites/InviteInfo.vue";
+import InviteInfo from '@/features/invite/components/InviteInfo.vue';
 
 export default {
   components: {

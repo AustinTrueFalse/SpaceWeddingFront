@@ -31,8 +31,6 @@
 /* Login form */
 .login-form {
   width: 400px;
-  background-color: rgba(11, 14, 48, 0.596) !important;
-  color: white;
   border-radius: 16px;
   padding: 20px;
   backdrop-filter: blur(10px);
@@ -42,7 +40,6 @@
 .login-form .v-card-title,
 .login-form .v-text-field,
 .login-form .v-btn {
-  background-color: transparent !important;
   color: white;
 }
 

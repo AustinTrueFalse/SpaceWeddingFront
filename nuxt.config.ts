@@ -1,6 +1,8 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
+
+  ssr: false, // если нужно для SSR, установи true
   compatibilityDate: "2024-04-03",
 
   runtimeConfig: {
@@ -9,7 +11,20 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: false, // если нужно для SSR, установи true
+  // devServer: {
+  //   host: "0.0.0.0",
+  // },
+
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 100,
+      },
+    },
+  },
+
+  
   devtools: { enabled: true },
   modules: [
     "@pinia/nuxt",

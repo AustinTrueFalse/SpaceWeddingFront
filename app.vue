@@ -2,11 +2,22 @@
   <v-app class="custom-dark-background">
     <!-- Панель навигации -->
     <v-app-bar
-      v-if="route.path !== '/login'"
+      v-if="route.path !== '/login' && !isInvite"
       app
       elevation="0"
       color="transparent"
     >
+      <v-btn v-if="authStore.user" variant="text" @click="forwardToMain">
+        Home
+      </v-btn>
+      <v-btn v-if="authStore.user" variant="text" @click="forwardToDashboard">
+        Events
+      </v-btn>
+      <v-btn v-if="authStore.user" variant="text" @click="forwardToDashboard">
+        About
+      </v-btn>
+      <v-spacer></v-spacer>
+
       <v-spacer></v-spacer>
       <UsernameMenu />
       <v-btn icon @click="toggle()">
@@ -27,7 +38,7 @@
     </v-app-bar>
 
     <!-- Основное содержимое -->
-    <v-main> <NuxtPage /> </v-main>
+    <v-main> <NuxtPage class="mt-5" /> </v-main>
 
     <!-- Всплывающие уведомления -->
     <SnackbarDefault />
@@ -38,18 +49,18 @@
 import "./assets/styles/main.css";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router"; // Импортируем роутер
-import { useAuthStore } from "./stores/auth";
-import { useEventStore } from "./stores/event";
-import { useGuestStore } from "./stores/guest";
-import { useUsersStore } from "./stores/users";
+import { useAuthStore } from "./features/auth/stores/auth";
+import { useEventStore } from "./features/event/stores/event";
+import { useGuestStore } from "./features/event/stores/guest";
+import { useUsersStore } from "./features/user/stores/users";
 
 import { useTheme } from "vuetify";
 import { useThemeStore } from "@/stores/theme";
 
-import ButtonDefault from "./components/template/ButtonDefault.vue";
-import SnackbarDefault from "./components/template/SnackbarDefault.vue";
+import ButtonDefault from "./shared/components/ButtonDefault.vue";
+import SnackbarDefault from "./shared/components/SnackbarDefault.vue";
 
-import UsernameMenu from "./components/user/UsernameMenu.vue";
+import UsernameMenu from "./features/user/components/UsernameMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -64,9 +75,18 @@ const themeStore = useThemeStore();
 // При загрузке
 themeStore.initTheme(theme);
 
+const isInvite = computed(() => route.path.includes('/invite/'))
+
 function toggle() {
   themeStore.toggleTheme(theme);
 }
+const forwardToDashboard = async () => {
+  router.push("/dashboard");
+};
+
+const forwardToMain = async () => {
+  router.push("/");
+};
 // Функция для выхода
 const logout = () => {
   authStore.signOut();

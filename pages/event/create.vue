@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import EventEdit from "~/components/EventEdit.vue";
+import EventEdit from '@/features/event/components/EventEdit.vue';
 
 definePageMeta({
   middleware: "auth", // Применяем middleware auth
