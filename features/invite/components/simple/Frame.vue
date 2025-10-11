@@ -6,22 +6,24 @@
       v-if="currentEvent.eventInvite.colorsInfo.colors.length > 0"
       class="my-10"
     />
-    <div class="text-center header-font increase-font my-10">
+    <div class="text-center header-font increase-font mt-10">
       ПОЖАЛУЙСТА, ПОДТВЕРДИТЕ ВАШЕ ПРИСУТСТВИЕ
     </div>
-    <v-form>
+    <v-container>
       <InputText
         v-model="guestStore.guest.guestName"
+        class="pt-3"
         label="Имя"
         variant="outlined"
       />
       <InputText
         v-model="guestStore.guest.guestPhone"
+        class="pt-5"
         label="Номер телефона"
         variant="outlined"
       />
       <CheckboxGroup
-        class="pt-3"
+        class="pt-8"
         v-model="selectedGuestDrinks"
         :items="drinkListItems"
         title="Напитки"
@@ -50,12 +52,12 @@
           ></ButtonDefault>
         </v-col>
       </v-row>
-    </v-form>
+    </v-container>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import "../../../assets/styles/gothic.css";
+import "../../../assets/styles/gothic.scss";
 
 import { useRoute } from "vue-router";
 import { useEventStore } from "../../../event/stores/event";
@@ -131,18 +133,13 @@ const guestStatuses = computed(() => {
 
 const addGuest = async () => {
   try {
-    await guestStore.addGuest(eventId); // Если здесь ошибка, выполнение перейдет в catch
-    eventStore.getGuests(eventId); // Выполнится только если addGuestAuth успешен
+    await guestStore.addGuest(eventId); 
+    eventStore.getGuests(eventId);
   } catch (error) {}
 };
 </script>
 
 <style scoped>
-/* Стили для страницы мероприятия */
+
 </style>
 
-<style scoped>
-.test {
-  background-color: #1f0707;
-}
-</style>

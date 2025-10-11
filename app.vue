@@ -20,7 +20,7 @@
 
       <v-spacer></v-spacer>
       <UsernameMenu />
-      <v-btn icon @click="toggle()">
+      <v-btn class="mx-2" icon @click="toggle()">
         <v-icon>{{
           themeStore.isDark ? "mdi-weather-night" : "mdi-white-balance-sunny"
         }}</v-icon>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import "./assets/styles/main.css";
+import "./assets/styles/main.scss";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router"; // Импортируем роутер
 import { useAuthStore } from "./features/auth/stores/auth";
@@ -75,7 +75,7 @@ const themeStore = useThemeStore();
 // При загрузке
 themeStore.initTheme(theme);
 
-const isInvite = computed(() => route.path.includes('/invite/'))
+const isInvite = computed(() => route.path.includes("/invite/"));
 
 function toggle() {
   themeStore.toggleTheme(theme);

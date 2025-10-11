@@ -64,6 +64,8 @@
                     height="200"
                     rounded="xl"
                     elevation="0"
+                    
+                    :color="isSelected ? 'primary' : 'surface'"
                     @click="toggle"
                   >
                     <div class="text-h3 flex-grow-1 text-center">
@@ -229,7 +231,6 @@
               class="w-100"
               text="Просмотреть приглашение"
               color="primary"
-              :loading="eventStore.loadingStatuses.eventCreate"
               @click="openInvitePreview"
             />
           </v-col>
@@ -241,7 +242,7 @@
               variant="tonal"
               color="primary"
               :text="buttonCreateText"
-              :loading="eventStore.loadingStatuses.eventCreate"
+              :loading="eventStore.loadingStatuses.eventCreate || eventStore.loadingStatuses.eventUpdate"
               @click="createEvent"
             />
           </v-col>

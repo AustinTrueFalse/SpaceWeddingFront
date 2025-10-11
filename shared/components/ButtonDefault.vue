@@ -1,11 +1,5 @@
 <template>
-  <v-btn
-    :variant="variant"
-    rounded="xl"
-    :color="color"
-    :disabled="disabled"
-    @click="onClick"
-  >
+  <v-btn v-bind="{ variant, color, disabled }" rounded="xl" @click="onClick">
     <span v-if="!loading">{{ text }}</span>
     <v-progress-circular
       v-if="loading"

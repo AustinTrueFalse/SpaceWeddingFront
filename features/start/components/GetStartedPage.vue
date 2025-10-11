@@ -25,11 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router"; // Импортируем роутер
+import { useRouter } from "vue-router"; 
 import { useAuthStore } from "../../auth/stores/auth";
 import DStar from "@/shared/components/3DStar.vue";
 
-const router = useRouter(); // Инициализация роутера
+const router = useRouter();
 
 const authStore = useAuthStore();
 
@@ -43,5 +43,5 @@ const getStarted = async () => {
 </script>
 
 <style scoped>
-/* Стили для компонента MainPage */
+
 </style>

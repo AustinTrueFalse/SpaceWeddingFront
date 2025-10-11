@@ -8,35 +8,37 @@
       v-model="query"
       label="Введите имя пользователя или email для поиска"
       :loading="usersStore.loadingStatuses.searchUsers"
-      @input="searchUsers"
+      @input-change="searchUsers"
     />
+    <v-card-subtitle
+      v-if="usersStore.usersList.length === 0"
+      class="text-center my-15"
+    >
+      Пользователи не найдены
+    </v-card-subtitle>
     <v-card
       v-for="user in usersStore.usersList"
-      class="my-2"
+      class="my-5"
       variant="flat"
       color="secondary"
     >
       <div v-if="user.id !== eventStore.selectedEventCurrent.userId">
         <v-card-title>{{ user.username }}</v-card-title>
         <v-card-subtitle>{{ user.email }}</v-card-subtitle>
-        <v-card-actions
-          ><v-btn color="white" @click="addAllowedUser(user.id)">
+        <v-card-actions 
+          >
+          <!-- <v-btn color="white" @click="addAllowedUser(user.id)">
             добавить
-          </v-btn></v-card-actions
-        >
+          </v-btn> -->
+          <ButtonDefault
+            class="w-25 mb-2 mt-2"
+            text="Добавить"
+            :loading="usersStore.loadingStatuses.addAllowedUser"
+            @click="addAllowedUser(user.id)"
+          ></ButtonDefault>
+        </v-card-actions>
       </div>
     </v-card>
-    <v-row justify="center" class="pt-10">
-      <v-col cols="6">
-        <ButtonDefault
-          class="mb-5 w-100"
-          color="secondary"
-          text="Добавить"
-          :loading="eventStore.loadingStatuses.addAllowedUser"
-          @click="() => addAllowedUser"
-        ></ButtonDefault>
-      </v-col>
-    </v-row>
   </DialogDefault>
 </template>
 
@@ -74,6 +76,8 @@ const addAllowedUser = async (addingUserId: string) => {
 };
 
 const searchUsers = async () => {
-  usersStore.searchUsers(query.value);
+  if (query.value) {
+    usersStore.searchUsers(query.value);
+  }
 };
 </script>

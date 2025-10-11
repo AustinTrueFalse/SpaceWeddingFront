@@ -24,7 +24,7 @@
 
               <div class="d-flex justify-end">
                 <ButtonText
-                  text="Не помню блин"
+                  text="Забыл пароль"
                   @click="forwardToPasswordResetPage"
                 />
               </div>
@@ -33,7 +33,6 @@
           <v-card-actions class="d-flex justify-center">
             <v-row justify="center">
               <v-col cols="10">
-                
                 <ButtonDefault
                   class="w-100 mb-2 mt-2"
                   text="Войти"
@@ -45,7 +44,7 @@
                 <v-divider></v-divider>
                 <div class="d-flex justify-center">
                   <v-btn
-                    class="text-capitalize px-5 mt-4"
+                    class="text-capitalize px-5 my-4"
                     variant="outlined"
                     @click="signInGoogle()"
                   >
@@ -61,7 +60,7 @@
     </v-row>
     <v-row v-if="!authStore.isConfirmed">
       <v-col class="d-flex justify-center align-center">
-        <v-card class="login-form" rounded="xl">
+        <v-card class="login-form pb-3" rounded="xl">
           <v-card-text class="d-flex justify-center">
             Еще не зарегистрировались?
           </v-card-text>

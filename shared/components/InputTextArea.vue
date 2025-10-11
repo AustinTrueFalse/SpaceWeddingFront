@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import "../../assets/styles/main.css";
 
 import { ref, computed, watch } from "vue";
 

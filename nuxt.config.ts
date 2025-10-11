@@ -1,7 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-
   ssr: false, // если нужно для SSR, установи true
   compatibilityDate: "2024-04-03",
 
@@ -16,6 +15,7 @@ export default defineNuxtConfig({
   // },
 
   vite: {
+    
     server: {
       watch: {
         usePolling: true,
@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     },
   },
 
-  
   devtools: { enabled: true },
   modules: [
     "@pinia/nuxt",
@@ -34,6 +33,7 @@ export default defineNuxtConfig({
   ],
 
   css: [
+    "@/assets/styles/main.scss",
     "@fontsource/roboto/index.css",
     "@fontsource/roboto/900.css",
     "@fontsource/roboto/700.css",

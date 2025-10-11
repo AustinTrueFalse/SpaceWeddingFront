@@ -19,7 +19,7 @@
       </v-btn>
     </template>
 
-    <v-card width="265px">
+    <v-card class="mt-2" width="265px">
       <v-card-text>
         <div>Имя пользователя</div>
         <div class="d-flex align-center mt-3">
@@ -32,7 +32,7 @@
           />
           <ButtonIcon
             v-if="!isUserNameEdit"
-            class="ml-1 mb-5"
+            class="ml-1"
             mdi-icon="mdi-pencil"
             @click="() => (isUserNameEdit = true)"
           />

@@ -10,10 +10,11 @@
       <v-col v-for="item in items" :key="item.id" cols="auto">
         <v-checkbox
           v-model="selectedItems"
-          :label="item.label"
-          :value="item.id"
           density="compact"
           class="mt-0 pt-0"
+          :label="item.label"
+          :value="item.id"
+          
         />
       </v-col>
     </v-row>

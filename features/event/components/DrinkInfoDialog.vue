@@ -22,6 +22,9 @@
         </v-row>
       </v-card-title>
     </v-card>
+    <v-card-subtitle v-if="guestDrinks.length === 0" class="text-center my-15">
+      У гостей еще нет выбранных напитков
+    </v-card-subtitle>
   </DialogDefault>
 </template>
 

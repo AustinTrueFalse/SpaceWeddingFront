@@ -5,15 +5,12 @@
   >
     <v-row>
       <v-col cols="9">
-        <v-chip rounded="xl" size="x-large" color="primary">
-          <div class="main-title">
-            <span class="mdi mdi-calendar-range"></span> {{ dateTime }}
-          </div>
-        </v-chip>
+        
         <div class="mt-2 main-title d-flex align-center justify-space-between">
-          <div>
+          <div class="ml-6">
             {{ eventStore.selectedEventCurrent.eventName }}
           </div>
+          
           <div class="d-flex align-center">
             <v-btn
               class="mr-2"
@@ -68,13 +65,17 @@
                   </div>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click="openAddAllowedUsersDialog">Пригласить</v-btn>
+                  <v-btn @click="openAddAllowedUsersDialog">Пригласить участника</v-btn>
                 </v-card-actions>
               </v-card>
             </v-menu>
           </div>
         </div>
-
+        <v-chip rounded="xl" size="x-large" color="primary">
+          <div class="main-title">
+            <span class="mdi mdi-calendar-range"></span> {{ dateTime }}
+          </div>
+        </v-chip>
         <v-row class="mt-2">
           <v-col cols="9">
             <v-row>
@@ -247,7 +248,7 @@
         </v-row>
       </v-col>
 
-      <v-col>
+      <v-col class="pt-6">
         <div>
           <v-row
             align="center"
@@ -257,7 +258,12 @@
           >
             <v-col class="pt-0">
               <a :href="getLink(item)" target="_blank" class="no-underline">
-                <v-card class="event-card h-100" rounded="xl" link elevation="0"> 
+                <v-card
+                  class="event-card h-100"
+                  rounded="xl"
+                  link
+                  elevation="0"
+                >
                   <v-row justify="center">
                     <v-col cols="1">
                       <v-icon class="my-4" size="30px">
@@ -346,12 +352,15 @@ import * as XLSX from "xlsx";
 
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import { useEventStore } from "../stores/event";;
-import { useGuestStore } from "../stores/guest";;
+import { useEventStore } from "../stores/event";
+import { useGuestStore } from "../stores/guest";
 import { useDialogStore } from "@/stores/dialog";
 import { useUsersStore } from "@/features/user/stores/users";
 import { ref, computed, onMounted } from "vue";
-import { formatDate, formatDateTime } from "../../../shared/utils/helpFunctions";
+import {
+  formatDate,
+  formatDateTime,
+} from "../../../shared/utils/helpFunctions";
 
 import YandexMap from "@/shared/components/YandexMap.vue";
 import GuestAddDialog from "./GuestAddDialog.vue";

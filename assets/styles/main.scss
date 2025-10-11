@@ -1,0 +1,118 @@
+
+
+// === Импорт шрифтов Google ===
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900&display=swap");
+
+// === Подключение San Francisco ===
+@font-face {
+  font-family: "San Francisco";
+  font-weight: normal;
+  font-style: normal;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/sanfrancisco/1.0.0/SF-UI-Display-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "San Francisco";
+  font-weight: bold;
+  font-style: normal;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/sanfrancisco/1.0.0/SF-UI-Display-Bold.otf") format("opentype");
+}
+
+// === Переменные шрифтов ===
+$font-sf: "San Francisco", "Inter", sans-serif;
+
+// === Базовые стили ===
+* {
+  font-family: $font-sf;
+}
+
+// === Страница Get Started ===
+.main-title {
+  font-size: 36px !important;
+  font-weight: 800;
+}
+
+// === Форма логина ===
+.login-form {
+  width: 400px;
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+
+  .v-card-title,
+  .v-text-field,
+  .v-btn {
+    color: white;
+  }
+}
+
+// === Для readonly полей ===
+.no-text-cursor {
+  cursor: default !important;
+
+  .v-input__control,
+  input {
+    cursor: default !important;
+  }
+}
+
+// === Карточки событий (если нужно, раскомментируй) ===
+// .event-card {
+//   background: linear-gradient(135deg, #1a1a50, #0a0a26) !important;
+//   color: white !important;
+// }
+
+// === Прочие UI элементы ===
+.field-chip {
+  width: 100%;
+}
+
+.big-button {
+  font-size: 20px !important;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.v-expansion-panel-text__wrapper {
+  padding: 0 !important;
+}
+
+// === Стили для scroll ===
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+// === EventCard ===
+.event-card-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.large-icon {
+  font-size: 48px !important;
+}
+
+.combobox-chip {
+  font-size: 16px;
+  height: 40px;
+  padding: 10px;
+}

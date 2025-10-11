@@ -10,13 +10,14 @@
       variant="outlined"
     />
     <InputText
+      class="pt-3"
       v-model="guestStore.guest.guestPhone"
       label="Номер телефона"
       variant="outlined"
       
     />
     <CheckboxGroup
-      class="pt-3"
+      class="pt-8"
       v-model="selectedGuestDrinks"
       :items="drinkListItems"
       title="Напитки"

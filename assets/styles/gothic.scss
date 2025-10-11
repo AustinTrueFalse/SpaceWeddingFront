@@ -1,3 +1,8 @@
+// === Переменные шрифтов ===
+$font-orlando: "Orlando", sans-serif;
+$font-montserrat: "Montserrat", sans-serif;
+
+// === Подключение шрифта ===
 @font-face {
   font-family: "Orlando";
   src: url("../styles/fonts/OrlandoCapsCG.otf") format("truetype");
@@ -5,8 +10,9 @@
   font-style: normal;
 }
 
+// === Общие классы ===
 .main-font {
-  font-family: "Orlando", sans-serif !important;
+  font-family: $font-orlando !important;
   font-size: 150px;
   line-height: 0.8;
 }
@@ -15,41 +21,48 @@
   letter-spacing: -10px;
 }
 
-.header-font {
-  font-family: "Montserrat", sans-serif !important;
-  font-size: 16px !important;
-  line-height: 1.1;
-}
-
-.header-font-small {
-  font-family: "Montserrat", sans-serif;
-  font-size: 13px;
-  line-height: 1.1;
-}
-
+.header-font,
+.header-font-small,
 .text-font-xs {
-  font-family: "Montserrat", sans-serif;
-  font-size: 10px;
+  font-family: $font-montserrat;
   line-height: 1.1;
+
+  &.header-font {
+    font-size: 16px !important;
+  }
+
+  &.header-font-small {
+    font-size: 13px;
+  }
+
+  &.text-font-xs {
+    font-size: 10px;
+  }
 }
 
 .timing-font {
-  font-family: "Orlando", sans-serif;
+  font-family: $font-orlando;
   font-size: 16px;
   line-height: 1.1;
 }
 
 .header-font-orlando {
-  font-family: "Orlando", sans-serif;
+  font-family: $font-orlando;
   font-size: 70px;
 }
 
-.text-right {
-  text-align: right;
-}
+.text {
+  &-right {
+    text-align: right;
+  }
 
-.text-left {
-  text-align: left;
+  &-left {
+    text-align: left;
+  }
+
+  &-center {
+    text-align: center !important;
+  }
 }
 
 .custom-card {
@@ -72,19 +85,17 @@
 }
 
 .letter-spacing {
-  letter-spacing: 40px !important;
-}
+  & {
+    letter-spacing: 40px !important;
+  }
 
-.letter-spacing-small {
-  letter-spacing: 20px !important;
+  &-small {
+    letter-spacing: 20px !important;
+  }
 }
 
 .background-color {
   background-color: #0a0a0a !important;
-}
-
-.text-center {
-  text-align: center !important;
 }
 
 .small-dot {
@@ -96,21 +107,22 @@
 }
 
 .rectangle {
-  height: 30px; /* Высота прямоугольника */
+  height: 30px;
   width: 100%;
-  margin-top: 5px; /* Расстояние между прямоугольниками */
+  margin-top: 5px;
 }
 
 .rounded-snackbar {
-  border-radius: 59%; /* Здесь вы можете установить желаемый радиус закругления углов */
+  border-radius: 59%;
 }
 
 .max-width-frame {
   max-width: 1200px !important;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
+
+// === Медиа-запросы ===
 
 @media screen and (min-width: 768px) {
   .increase-font {
@@ -122,13 +134,13 @@
   }
 
   .increase-text-font-xs {
-    font-family: "Montserrat", sans-serif;
+    font-family: $font-montserrat;
     font-size: 12px;
     line-height: 1.1;
   }
 
   .increase-timing-font {
-    font-family: "Orlando", sans-serif;
+    font-family: $font-orlando;
     font-size: 20px !important;
     line-height: 1.1;
   }
@@ -138,6 +150,7 @@
   .decriase-font {
     font-size: 50px !important;
   }
+
   .decriase-main-font {
     font-size: 110px !important;
   }

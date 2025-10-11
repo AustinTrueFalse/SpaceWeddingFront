@@ -6,7 +6,7 @@
       variant="text"
       @click="onClick"
     >
-      Не помню блин
+      {{ text }}
     </v-btn>
     <v-progress-circular
       v-if="loading"

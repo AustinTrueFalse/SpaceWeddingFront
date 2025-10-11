@@ -7,42 +7,44 @@
   >
     <v-expansion-panels flat multiple>
       <v-expansion-panel v-for="guest in guests" :key="guest.id">
-  <template v-slot:title>
-    <div class="d-flex flex-column">
-      <div class="d-flex justify-start align-center">
-        <span>{{ guest.guestName }}</span>
-        <v-chip class="ml-5">{{ guest.guestTag.tagName }}</v-chip>
-      </div>
-      <div class="mt-5">
-        <span>Выбранные напитки</span>
-        <v-chip
-          
-          v-for="(drink, index) in guest.guestDrinks"
-          :key="drink.id"
-          :class="index === 0 ? 'ml-5' : 'ml-2'"
-          :color="'pink'"
-        >
-          {{ drink.drinkName }}
-        </v-chip>
-      </div>
-    </div>
-  </template>
+        <template v-slot:title>
+          <div class="d-flex flex-column">
+            <div class="d-flex justify-start align-center">
+              <span>{{ guest.guestName }}</span>
+              <v-chip class="ml-5">{{ guest.guestTag.tagName }}</v-chip>
+            </div>
+            <div class="mt-5">
+              <span>Выбранные напитки</span>
+              <v-chip
+                v-for="(drink, index) in guest.guestDrinks"
+                :key="drink.id"
+                :class="index === 0 ? 'ml-5' : 'ml-2'"
+                :color="'pink'"
+              >
+                {{ drink.drinkName }}
+              </v-chip>
+            </div>
+          </div>
+        </template>
 
-  <v-expansion-panel-text>
-    <InputTextArea v-model="guest.guestDescr" />
-  </v-expansion-panel-text>
-  <v-divider></v-divider>
-</v-expansion-panel>
+        <v-expansion-panel-text>
+          <InputTextArea v-model="guest.guestDescr" />
+        </v-expansion-panel-text>
+        <v-divider></v-divider>
+      </v-expansion-panel>
     </v-expansion-panels>
 
-    <v-row justify="center" class="pt-10">
+    <v-card-subtitle v-if="guests.length === 0" class="text-center my-15">
+      Гостей пока нет
+    </v-card-subtitle>
+
+    <v-row v-if="guests.length !== 0" justify="center" class="pt-10">
       <v-col cols="6">
         <ButtonDefault
           class="mb-5 w-100"
           text="Сохранить"
           :loading="eventStore.loadingStatuses.guestsUpdate"
           @click="updateGuestsDescr"
-  
         ></ButtonDefault>
       </v-col>
     </v-row>
@@ -55,7 +57,6 @@ import { useEventStore } from "../stores/event";
 
 import { useDialogStore } from "@/stores/dialog";
 import { computed } from "vue";
-
 
 import DialogDefault from "@/shared/components/DialogDefault.vue";
 

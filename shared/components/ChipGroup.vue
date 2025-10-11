@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-0">
     <v-row>
-      <v-card-title>
+      <v-card-title class="pb-0">
         {{ title }}
       </v-card-title>
     </v-row>

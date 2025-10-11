@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import "../../assets/styles/main.css"
 import { ref, computed, watch } from "vue";
+import { debounce } from "../utils/helpFunctions";
 
 
 const props = withDefaults(defineProps<{
@@ -84,9 +84,10 @@ watch(localValue, (newValue) => {
   emit("update:modelValue", newValue);
 });
 
-const onInputChange = () => {
+const onInputChange = debounce(() => {
   emit("input-change", localValue.value);
-};
+}, 500);
+
 
 const onKeyPress = (event: KeyboardEvent) => {
   if (!props.time) return;
