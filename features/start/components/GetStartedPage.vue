@@ -35,7 +35,7 @@ const authStore = useAuthStore();
 
 const getStarted = async () => {
   if (authStore.user) {
-    router.push("/dashboard");
+    router.push("/playlists");
   } else {
     router.push("/login");
   }

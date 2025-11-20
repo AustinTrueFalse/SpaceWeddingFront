@@ -1,4 +1,3 @@
-// stores/auth.ts
 import { defineStore } from "pinia";
 import { cloneDeep, isEqual } from "lodash-es";
 import { ref } from "vue";
